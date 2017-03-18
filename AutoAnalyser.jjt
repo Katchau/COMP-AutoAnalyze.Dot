@@ -1,0 +1,87 @@
+PARSER_BEGIN(AutoAnalyser)
+
+
+public class AutoAnalyser {
+    public static void main(String args[]) throws ParseException {
+        AutoAnalyser analyser = new Analyser(System.in);
+
+        SimpleNode star = new SimpleNode();
+        
+        start.start();
+
+        root.dump("");
+    }
+}
+
+
+PARSER_END(AutoAnalyser)
+
+
+
+SKIP : {" " | "\r" | "\t"}
+TOKEN:
+{
+  
+     <EQUAL : "=">
+    |<VARIABLE: (["A"-"Z","a"-"z"] (["A" - "Z", "a"- "z","0"-"9"])*)>
+    |<ENDLINE : ";">
+    |<LF : "\n">
+    |<STRING: ("\""(~["\""])*"\"") >
+
+    // OPERATION
+    |<SUM : "+">
+    |<COMPLEMENT: "!">
+    |<PRODUCT: ".">
+    |<INTERSECTION: "/\\" >
+    |<UNION: "\\/">
+    |<DIFFERENCE:"-">
+    |<ACCEPT: ".accept">
+    |<READ : ".read">
+    |<WRITE :".write">
+}
+
+SimpleNode start() : {} {
+    statements() (<LF>)* operations() <LF> {
+        return jjThis;
+    }
+}
+
+void statements() : { } {
+    (statement())+
+}
+
+void operations() : { } {
+    (automatOp())+  (saveOp())* 
+}
+
+void saveOp() : {   } {
+    <WRITE> "(" identifier() "," filename() ")" <ENDLINE> <LF>
+    // o 1º arg teria
+}
+
+
+void automatOp() : { } {
+    <SUM> //FIX
+}
+
+void statement() : { } {
+    identifier() loaddotty() <ENDLINE> <LF>
+}
+
+void identifier() : { Token id;} {
+        id = <VARIABLE> {
+                    
+        } #Variable
+}
+
+
+void loaddotty() : { } {
+    <READ> "(" filename() ")"
+}
+
+void filename() : {Token file;} {
+    id = <STRING>{
+
+    } #Filename
+}
+
