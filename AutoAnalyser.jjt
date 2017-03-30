@@ -3,13 +3,18 @@ PARSER_BEGIN(AutoAnalyser)
 
 public class AutoAnalyser {
     public static void main(String args[]) throws ParseException {
-        AutoAnalyser analyser = new Analyser(System.in);
+        AutoAnalyser analyser = new AutoAnalyser(System.in);
 
-        SimpleNode star = new SimpleNode();
+        SimpleNode start;
         
-        start.start();
-
-        root.dump("");
+     //   try {
+            start = analyser.start();
+            //System.out.println("accepted");
+             start.dump("");
+       // } catch (Exception t){
+            //System.out.println("rejected");
+        //}
+       
     }
 }
 
@@ -27,45 +32,62 @@ TOKEN:
     |<ENDLINE : ";">
     |<LF : "\n">
     |<STRING: ("\""(~["\""])*"\"") >
-
     // OPERATION
     |<SUM : "+">
     |<COMPLEMENT: "!">
-    |<PRODUCT: ".">
+    |<CONCATENATION: ".">
     |<INTERSECTION: "/\\" >
-    |<UNION: "\\/">
+    |<UNION: "|">
     |<DIFFERENCE:"-">
     |<ACCEPT: ".accept">
+    //Load and save
     |<READ : ".read">
     |<WRITE :".write">
 }
 
 SimpleNode start() : {} {
-    statements() (<LF>)* operations() <LF> {
-        return jjThis;
+     (LOOKAHEAD(<VARIABLE> <READ>) read())+ 
+     operations()  
+     saves(){
+        return jjtThis;
     }
 }
 
-void statements() : { } {
-    (statement())+
+
+void read() : {} {
+  identifier() loaddotty() <ENDLINE> <LF>
 }
 
-void operations() : { } {
-    (automatOp())+  (saveOp())* 
+void operations() : {  } {
+  identifier() <EQUAL> expression() <ENDLINE> <LF>
 }
 
-void saveOp() : {   } {
-    <WRITE> "(" identifier() "," filename() ")" <ENDLINE> <LF>
+void expression():{} {
+    expr1()
+}
+
+void expr1():{} {
+
+    expr2()[
+        (
+            <SUM> expr2() #sum 
+          | <COMPLEMENT> expr2() #complement 
+          | <CONCATENATION> expr2() #concatenation 
+          | <INTERSECTION> expr2 () #intersection 
+          | <UNION> expr2() #union 
+          | <DIFFERENCE> expr2() #difference
+          | <ACCEPT> expr2() #accept
+        )
+    ]
+}
+
+void expr2():{} {
+    "(" expr1() ")" | <VARIABLE>
+}
+
+void saves() : {   } {
+    identifier() <WRITE>"(" filename() ")" <ENDLINE> <LF>
     // o 1º arg teria
-}
-
-
-void automatOp() : { } {
-    <SUM> //FIX
-}
-
-void statement() : { } {
-    identifier() loaddotty() <ENDLINE> <LF>
 }
 
 void identifier() : { Token id;} {
@@ -80,8 +102,8 @@ void loaddotty() : { } {
 }
 
 void filename() : {Token file;} {
-    id = <STRING>{
-
+    file = <STRING>{
+        
     } #Filename
 }
 
