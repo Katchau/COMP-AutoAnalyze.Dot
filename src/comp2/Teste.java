@@ -8,6 +8,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.DefaultGraph;
+import org.graphstream.stream.file.FileSinkDOT;
 import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceFactory;
 
@@ -46,7 +47,9 @@ public class Teste {
 				System.err.println("Error: No transaction value!");
 				return false;
 			}
-			System.out.println("Edge " + trans + " to " + e.getTargetNode().getId());
+			String endNode = e.getTargetNode().getId();
+			if(endNode.equals(g.getNode(i).getId()))continue;
+			System.out.println("Edge " + trans + " to " + endNode);
 			if(!foundType){
 				if(transactions.contains(trans))
 					type = 2;
@@ -96,12 +99,11 @@ public class Teste {
 			fs.addSink(g);
 			fs.begin(file);
 			while(fs.nextEvents()){
-				
+				//do nothing xD
 			}
 		} catch (IOException e) {
 			System.err.println("Error: No such file" + file);
 		}
-		
 		g.display();
 		if(!getAutomataType())
 			return;
@@ -114,6 +116,14 @@ public class Teste {
 			e.printStackTrace();
 		} finally {
 			fs.removeSink(g);
+		}
+		
+		FileSinkDOT fsd = new FileSinkDOT();
+		fsd.setDirected(true);
+		try {
+			fsd.writeAll(g, "saved.dot");
+		} catch (IOException e) {
+			System.err.println("Error: Saving dot file");
 		}
 	}
 

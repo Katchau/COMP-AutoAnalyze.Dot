@@ -1,0 +1,10 @@
+digraph {
+	"start" ;
+	"b" ;
+	"c" ;
+	"end" ;
+	"start" -> "b" ["label"="meme"];
+	"b" -> "c" ["label"="kek"];
+	"b" -> "end" ["label"="eps"];
+	"end" -> "start" ["label"="hiv"];
+}
