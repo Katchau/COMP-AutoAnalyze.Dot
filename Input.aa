@@ -1,0 +1,7 @@
+A.read("a.dot");
+B.read("b.dot");
+C.read("c.dot");
+D=A+B;
+E=D+C;
+D.write("d.dot");
+E.write("e.dot");
