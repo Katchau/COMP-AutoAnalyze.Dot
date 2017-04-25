@@ -1,0 +1,10 @@
+digraph graphname { 
+                start -> b [label="meme"];
+                b -> c [label="kek"];
+                c -> d [label="chups"];
+                c -> b [label="chups"];
+                d -> e_end[label="autist"];
+                e_end -> start [label="hiv"];
+				e_end -> morreu [label="loli"];
+				morreu -> morreu [label="giro"];
+        }
