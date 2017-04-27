@@ -10,7 +10,7 @@ import java.util.HashSet;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.stream.file.FileSinkDOT;
 
 public class AutomataOperations {
@@ -74,13 +74,13 @@ public class AutomataOperations {
 		if(hasNew)g.addNode(newNode);
 		System.out.println("Transaction From: " + b4node + " to " + newNode + " when: " + trans);
 		String edge = trans + "" + b4node + "" + newNode;
-		g.addEdge(edge, b4node, newNode);
+		g.addEdge(edge, b4node, newNode, true);//<3 prof
 		g.getEdge(edge).setAttribute("label", trans);
 	}
 	
 	public static void convert2DFA(Automata a){
 		if(a.type < 1)return;
-		Graph ret = new MultiGraph(a.g.getId());//TODO wtf DefaultGraph puta que pariu :/
+		Graph ret = new DefaultGraph(a.g.getId());
 		String start = getEClosure(a.start,"");
 		HashMap<String, Boolean> states = new HashMap<String, Boolean>();
 		ret.addNode(start.replace("%", "-"));
@@ -107,7 +107,6 @@ public class AutomataOperations {
 			states.put(curr, true);
 		}
 		ret.display();
-//		exportAutomata(ret,"saved.dot");
 	}
 	
 	public static void exportAutomata(Graph g, String fileName){
