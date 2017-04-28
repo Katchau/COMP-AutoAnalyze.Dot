@@ -16,6 +16,7 @@ public class AutoAnalyser{
                start.dump("");
           //} catch (Exception t){
               //System.out.println("rejected");
-          //}
+          //} 
+              start.execute();
         }
 }

@@ -2,11 +2,16 @@
 rm -r ./bin
 mkdir ./bin
 cp Input.aa bin/Input.aa
-cd src/
+cp ./src/*.java ./bin/
+cp ./src/*.jj ./bin
+cp ./src/*.jjt ./bin
+cd ./bin
 jjtree AutoAnalyserParser.jjt        
 javacc.sh AutoAnalyserParser.jj
 javac *.java
-mv *.class ../bin/
-cd ../bin/
+find . -name "*.java" -type f -delete
+find . -name "*.jj" -type f -delete
+find . -name "*.jjt" -type f -delete
 java AutoAnalyser
+
 
