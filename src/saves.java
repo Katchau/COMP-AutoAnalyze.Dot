@@ -10,5 +10,8 @@ class saves extends SimpleNode {
     super(p, id);
   }
 
+  public void execute() {
+    System.out.println("SAVE");
+  }
 }
 /* JavaCC - OriginalChecksum=5bd6f4fa3268941d577e515a075d297b (do not edit this line) */

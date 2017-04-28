@@ -10,5 +10,8 @@ class sum extends SimpleNode {
     super(p, id);
   }
 
+  public String toString() {
+     return AutoAnalyserParserTreeConstants.jjtNodeName[id];
+  }
 }
 /* JavaCC - OriginalChecksum=9c38a72212178b9cca8038ad4824bfd8 (do not edit this line) */

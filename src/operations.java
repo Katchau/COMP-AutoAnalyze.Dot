@@ -10,5 +10,9 @@ class operations extends SimpleNode {
     super(p, id);
   }
 
+  public void execute() {
+    System.out.println("Operation");
+  }
+
 }
 /* JavaCC - OriginalChecksum=fa5980d18b3ca0765fab7a4e900d5fec (do not edit this line) */

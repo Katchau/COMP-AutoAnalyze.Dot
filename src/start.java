@@ -9,6 +9,15 @@ class start extends SimpleNode {
   public start(AutoAnalyserParser p, int id) {
     super(p, id);
   }
-
+  
+  public void execute() {
+	System.out.println("Start");
+  	for(int i = 0; i < children.length ; i++) {
+      	children[i].execute();
+      	System.out.println("Execute " + children[i].toString());
+  	}
+  
+  }
+ 
 }
 /* JavaCC - OriginalChecksum=598994b6409c3d3955b1bdd4b4c2af2c (do not edit this line) */

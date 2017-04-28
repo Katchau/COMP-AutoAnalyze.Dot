@@ -30,5 +30,7 @@ interface Node {
 
   /** Return the number of children the node has. */
   public int jjtGetNumChildren();
+
+  public void execute();
 }
 /* JavaCC - OriginalChecksum=27221a0221b1ad769b0d45d97aafd030 (do not edit this line) */

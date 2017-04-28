@@ -10,5 +10,9 @@ class read extends SimpleNode {
     super(p, id);
   }
 
+  public void execute() {
+    System.out.println("READ");
+  }
+
 }
 /* JavaCC - OriginalChecksum=bc85757b69b45a932f95113095bf9e18 (do not edit this line) */
