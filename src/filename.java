@@ -3,18 +3,21 @@
 public
 class filename extends SimpleNode {
   
-  public String name = null;
-
-  public filename(int id) {
+    public String name = null;
+    public filename(int id) {
     super(id);
-  }
+    }
 
-  public filename(AutoAnalyserParser p, int id) {
+    public filename(AutoAnalyserParser p, int id) {
     super(p, id);
-  }
+    }
 
-  public Object jjtGetValue() { return name; }
+    public void execute() {
+        System.out.println("FILENAME");
+    }
 
-  public String toString() { return AutoAnalyserParserTreeConstants.jjtNodeName[id] + " " + name; }
+    public Object jjtGetValue() { return name; }
+
+    public String toString() { return AutoAnalyserParserTreeConstants.jjtNodeName[id] + " " + name; }
 }
 /* JavaCC - OriginalChecksum=21f49ebf363963b382e2ad8a58e0066e (do not edit this line) */

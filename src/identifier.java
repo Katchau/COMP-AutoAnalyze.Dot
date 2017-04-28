@@ -3,19 +3,23 @@
 public
 class identifier extends SimpleNode {
 
-  public String name = null;
+    public String name = null;
 
-  public identifier(int id) {
+    public identifier(int id) {
     super(id);
-  }
+    }
 
-  public identifier(AutoAnalyserParser p, int id) {
+    public identifier(AutoAnalyserParser p, int id) {
     super(p, id);
-  }
+    }
 
-  public Object jjtGetValue() { return name; }
+    public void execute() {
+        System.out.println("IDENTIFIER");
+    }
 
-  public String toString() { return AutoAnalyserParserTreeConstants.jjtNodeName[id] + " " + name; }
+    public Object jjtGetValue() { return name; }
+
+    public String toString() { return AutoAnalyserParserTreeConstants.jjtNodeName[id] + " " + name; }
 
 }
 /* JavaCC - OriginalChecksum=2f17256bf7e587070898a7ad5d4d5811 (do not edit this line) */

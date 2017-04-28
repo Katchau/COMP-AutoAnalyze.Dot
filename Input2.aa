@@ -1,0 +1,3 @@
+A.read("test.dot");
+B=A+A;
+B.write("b.dot");
