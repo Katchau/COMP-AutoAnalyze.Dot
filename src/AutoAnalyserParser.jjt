@@ -47,7 +47,7 @@ SimpleNode start() : {} {
 
 
 void read() : {} {
-  identifier() loaddotty() <ENDLINE> 
+  identifier() loaddotty() <ENDLINE>
 }
 
 void operations() : {  } {
@@ -63,18 +63,16 @@ void expr1():{} {
     expr2()[
         (
             <SUM> expr1() #sum
-          | <COMPLEMENT> expr1() #complement
           | <CONCATENATION> expr1() #concatenation
           | <INTERSECTION> expr1() #intersection
           | <UNION> expr1() #union
           | <DIFFERENCE> expr1() #difference
-          | <ACCEPT> expr1() #accept
         )
     ]
 }
 
 void expr2():{} {
-    "(" expr1() ")" | <VARIABLE>
+    "(" expr1() ")" | identifier() | <COMPLEMENT> expr1() #complement
 }
 
 void saves() : {   } {
