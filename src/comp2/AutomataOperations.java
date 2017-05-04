@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -107,6 +108,27 @@ public class AutomataOperations {
 			states.put(curr, true);
 		}
 		ret.display();
+	}
+	
+	//verify tem de ser do genero trans1%trans2%trans3
+	//converter para dfa antes :)
+	public static boolean acceptString(Automata a, String verify){
+		ArrayList<String> transactions = new ArrayList<String>(Arrays.asList(verify.split("%")));
+		Node n = a.start;
+		for(String trans : transactions){
+			boolean hasT = false;
+			for(Edge e : n.getEachEdge()){
+				Node end = e.getTargetNode();
+				if(end.equals(n) && !end.equals(e.getSourceNode()))continue;
+				if(trans.equals(e.getAttribute("label"))){
+					hasT = true;
+					n = end;
+					break;
+				}
+			}
+			if(!hasT) return false;
+		}
+		return Pattern.compile(".*_end.*").matcher(n.getId()).matches();
 	}
 	
 	public static void exportAutomata(Graph g, String fileName){
