@@ -1,6 +1,0 @@
-digraph graphname { 
-                a -> b; 
-                b -> c;
-                b -> d;
-                d -> a;
-        }
