@@ -3,7 +3,7 @@ import java.io.*;
 public class AutoAnalyser{
 
       public static void main(String args[]) throws ParseException, FileNotFoundException {
-        File f = new File("Input2.aa");
+        File f = new File("Input.aa");
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         AutoAnalyserParser analyser = new AutoAnalyserParser(br);
@@ -16,7 +16,7 @@ public class AutoAnalyser{
                start.dump("");
           //} catch (Exception t){
               //System.out.println("rejected");
-          //} 
+          //}
               start.execute();
         }
 }
