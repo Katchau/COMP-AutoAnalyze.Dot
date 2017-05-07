@@ -71,8 +71,13 @@ void expr1():{} {
     ]
 }
 
-void expr2():{} {
-    "(" expr1() ")" | identifier() | <COMPLEMENT> expr1() #complement
+void expr2():{}{
+  <COMPLEMENT> expr3() #complement
+  | expr3()
+}
+
+void expr3():{} {
+    "(" expr1() ")" | identifier() 
 }
 
 void saves() : {   } {
