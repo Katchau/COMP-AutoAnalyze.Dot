@@ -2,6 +2,8 @@ A.read("a.dot");
 B.read("b.dot");
 C.read("c.dot");
 D=A+!B;
+D.accept();
 E=D+C;
+E.accept();
 D.write("d.dot");
 E.write("e.dot");
