@@ -29,7 +29,7 @@ TOKEN:
     |<INTERSECTION: "/\\" >
     |<UNION: "|">
     |<DIFFERENCE:"-">
-    |<ACCEPT: ".accept()">
+    |<ACCEPT: ".accept">
     //Load and save
     |<READ : ".read">
     |<WRITE :".write">
@@ -54,7 +54,7 @@ void operations() : {  } {
     identifier()
     (
         <EQUAL> expression()
-      | <ACCEPT> #accept
+      | <ACCEPT> "(" input() #input ")" #accept
     )
     <ENDLINE>
 }
@@ -82,7 +82,7 @@ void expr2():{}{
 }
 
 void expr3():{} {
-    "(" expr1() ")" | identifier() 
+    "(" expr1() ")" | identifier()
 }
 
 void saves() : {   } {
@@ -105,4 +105,9 @@ void filename() : {Token file;} {
     file = <STRING>{
         jjtThis.name = file.image;
     }
+}
+
+void input() : {Token in;}  {
+    in = <STRING> {
+      jjtThis.name = in.image;   }
 }
