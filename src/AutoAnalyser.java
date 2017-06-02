@@ -11,7 +11,7 @@ public class AutoAnalyser{
         SimpleNode start;
 
           //try {
-               start = analyser.start();
+               start = analyser.Start();
               //System.out.println("accepted");
                start.dump("");
           //} catch (Exception t){

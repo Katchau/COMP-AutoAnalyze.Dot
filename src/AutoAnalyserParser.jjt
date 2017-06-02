@@ -35,10 +35,10 @@ TOKEN:
     |<WRITE :".write">
 }
 
-SimpleNode start() : {} {
-     (LOOKAHEAD(<VARIABLE> <READ>) read())+
-     (LOOKAHEAD(2)operations())+
-     (LOOKAHEAD(<VARIABLE> <WRITE>)saves())+
+SimpleNode Start() : {} {
+     (LOOKAHEAD(<VARIABLE> <READ>) Read())+
+     (LOOKAHEAD(2)Operations())+
+     (LOOKAHEAD(<VARIABLE> <WRITE>)Saves())+
      <EOF>
      {
         return jjtThis;
@@ -46,68 +46,68 @@ SimpleNode start() : {} {
 }
 
 
-void read() : {} {
-  identifier() loaddotty() <ENDLINE>
+void Read() : {} {
+  Identifier() Loaddotty() <ENDLINE>
 }
 
-void operations() : {  } {
-    identifier()
+void Operations() : {  } {
+    Identifier()
     (
-        <EQUAL> expression()
-      | <ACCEPT> "(" input() #input ")" #accept
+        <EQUAL> Expression()
+      | <ACCEPT> "(" Input() #input ")" #Accept
     )
     <ENDLINE>
 }
 
-void expression():{} {
-    expr1()
+void Expression():{} {
+    Expr1()
 }
 
-void expr1():{} {
+void Expr1():{} {
 
-    expr2()[
+    Expr2()[
         (
-            <SUM> expr1() #sum
-          | <CONCATENATION> expr1() #concatenation
-          | <INTERSECTION> expr1() #intersection
-          | <UNION> expr1() #union
-          | <DIFFERENCE> expr1() #difference
+            <SUM> Expr1() #Sum
+          | <CONCATENATION> Expr1() #Concatenation
+          | <INTERSECTION> Expr1() #Intersection
+          | <UNION> Expr1() #Union
+          | <DIFFERENCE> Expr1() #Difference
         )
     ]
 }
 
-void expr2():{}{
-  <COMPLEMENT> expr3() #complement
-  | expr3()
+void Expr2():{}{
+  <COMPLEMENT> Expr3() #Complement
+  | Expr3()
 }
 
-void expr3():{} {
-    "(" expr1() ")" | identifier()
+void Expr3():{} {
+    "(" Expr1() ")" | Identifier()
 }
 
-void saves() : {   } {
-    identifier() <WRITE>"(" filename() ")" <ENDLINE>
+void Saves() : {   } {
+    Identifier() <WRITE>"(" Filename() ")" <ENDLINE>
     // o 1º arg teria
 }
 
-void identifier() : { Token id;} {
+void Identifier() : { Token id;} {
         id = <VARIABLE> {
             jjtThis.name = id.image;
         }
 }
 
 
-void loaddotty() : { } {
-    <READ> "(" filename() ")"
+void Loaddotty() : { } {
+    <READ> "(" Filename() ")"
 }
 
-void filename() : {Token file;} {
+void Filename() : {Token file;} {
     file = <STRING>{
         jjtThis.name = file.image;
     }
 }
 
-void input() : {Token in;}  {
+void Input() : {Token in;}  {
     in = <STRING> {
       jjtThis.name = in.image;   }
 }
