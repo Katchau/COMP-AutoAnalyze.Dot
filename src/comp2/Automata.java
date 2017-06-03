@@ -18,18 +18,23 @@ public class Automata {
 	public Node start;
 	private FileSource fs = null;
 	public ArrayList<String> transValues = new ArrayList<String>();
-	private final Pattern endState = Pattern.compile(".*_end.*");
-	private final Pattern startState = Pattern.compile(".*start.*");
-	
+	protected static final Pattern endState = Pattern.compile(".*_end.*");
+	protected static final Pattern startState = Pattern.compile(".*start.*");
+	protected static final Pattern deathState = Pattern.compile(".*new-death-node.*");
+
+	public Automata(){
+
+    }
+
 	public Automata(String fileName){
 		if(!importAutomata(fileName))
 			return;
 		if(!getAutomataType())
 			return;
-		automataTypePrint();
+		automataTypePrint();//TODO remove
 		closeAutomata();
 	}
-	
+
 	public void automataTypePrint(){
 		System.out.print("Automata Type: ");
 		switch(type){
@@ -55,7 +60,7 @@ public class Automata {
 		}
 		System.out.println("");
 	}
-	
+
 	public boolean analyzeEdges(int i,Iterator<Edge> edges){
 		ArrayList<String> transactions = new ArrayList<String>();
 		while(edges.hasNext()){
@@ -80,9 +85,11 @@ public class Automata {
 			else if(i == 0)
 				transValues.add(trans);
 		}
+		if(transactions.size() < transValues.size())
+		    type = 1;
 		return true;
 	}
-	
+
 	public boolean getAutomataType(){
 		int startStates = 0;
 		int endStates = 0;
@@ -90,7 +97,7 @@ public class Automata {
 			Node n = g.getNode(i);
 			String nodeType = n.getId();
 			if(startState.matcher(nodeType).matches()){
-				 start = n; 
+				 start = n;
 				 startStates++;
 			}
 			if(endState.matcher(nodeType).matches())endStates++;
@@ -104,7 +111,7 @@ public class Automata {
 		}
 		return true;
 	}
-	
+
 	public boolean importAutomata(String fileName){
 		g = new DefaultGraph(fileName);
 		try {
@@ -118,12 +125,11 @@ public class Automata {
 			System.err.println("Error: No such file " + fileName);
 			return false;
 		}
-		g.display(); //TODO remover dp
 		return true;
 	}
-	
+
 	public void closeAutomata(){
-		//ter isto separado porcausa da biblioteca. ver http://graphstream-project.org/doc/Tutorials/Reading-files-using-FileSource/ 
+		//ter isto separado porcausa da biblioteca. ver http://graphstream-project.org/doc/Tutorials/Reading-files-using-FileSource/
 		try {
 			fs.end();
 		} catch( IOException e) {

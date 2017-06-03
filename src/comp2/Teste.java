@@ -6,9 +6,14 @@ public class Teste {
 	//e sempre preciso fazer esta verificacao 
 	//if(endNode.equals(testNode) && !endNode.equals(startNode))continue;
 	public static void main(String[] args) {
-		Automata at = new Automata("saved.dot");
-		AutomataOperations.convert2DFA(at);
-		System.out.println(AutomataOperations.acceptString(at, "a%b%a%b%a%b%b%a%a%b%b"));
+		Automata at = new Automata("saved2.dot");
+		if(at.type > 1)AutomataOperations.convert2DFA(at);
+		if(at.type == 1){
+		    at.type = 0;
+		    AutomataOperations.addDeathState(at,at.g);
+        }
+
+
 	}
 
 }
