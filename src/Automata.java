@@ -157,6 +157,7 @@ public class Automata {
 			String startNodeType = reverseNode(start);
 			String endNodeType = reverseNode(end);
 			g.addEdge(e.getId(), startNodeType, endNodeType, true);
+			g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
 		}
 
 		return out;
@@ -180,27 +181,39 @@ public class Automata {
 		out.g = new DefaultGraph("union");
 
 		// create nodes // DFA1 X DFA2
+		ArrayList<String[]> pairedNodes = new ArrayList<String[]>();
+
 		for(int i = 0; i < g.getNodeCount(); i++){
 			Node n = g.getNode(i);
 			String nodeType = n.getId();
 
 			for (int k = 0;k  < in.g.getNodeCount(); k++) {
 				Node nIN = in.g.getNode(k);
-	
 				String newNode = nodeType + " "+nIN.getId();
+				pairedNodes.add(new String[]{nodeType,nIN.getId()});
 				out.g.addNode(newNode);
 			}
 		}
 
-		//add edges
-		//TODO ter o alfabeto alf
-		//Para cada Nó X,Y  -(alf[i])->  Xn,Yn
-		// adicionar aresta
 		for(int i = 0; i < g.getEdgeCount(); i++) {
+			Edge e = g.getEdge(i);
+			String sourceA = e.getNode0();
+			String destA = e.getNode1();
+			String value = e.getAttribute("label").toString();
 
+			for( int k = 0; k < in.g.getEdgeCount(); k++) {
+				Edge b = in.g.getEdge(k);
+				String sourceB = b.getNode0();
+				String destB = b.getNode1();
+				String valueB = b.getAttribute("label").toString();
+
+				if(value.equals(valueB)) {
+					String source = sourceA + " " + sourceB;
+					String dest = destA + " " + destB;
+					out.g.addEdge(source+dest, source, dest, true );
+				}
+			}
 		}
-
-		//estados finais dois estados terminais do DFA1 x DFA2
 		return out;
 	}
 
