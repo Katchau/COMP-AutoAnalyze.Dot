@@ -10,5 +10,14 @@ class Expr1 extends SimpleNode {
     super(p, id);
   }
 
+ public void execute() {
+    System.out.println("Execute Expr1");
+
+
+    for(int i=0; i < children.length; i++) {
+      children[i].execute();
+    }
+    
+  }
 }
 /* JavaCC - OriginalChecksum=b245cbe223e1688cfdbdf42df5c0c1ff (do not edit this line) */

@@ -10,5 +10,14 @@ class Operations extends SimpleNode {
     super(p, id);
   }
 
+  public void execute() {
+    System.out.println("Execute OPERATIONS");
+
+
+    for(int i=0; i < children.length; i++) {
+      children[i].execute();
+    }
+
+  }
 }
 /* JavaCC - OriginalChecksum=a7204e20a77e3b9c22fffa6547326ffd (do not edit this line) */

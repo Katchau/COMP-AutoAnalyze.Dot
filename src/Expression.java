@@ -10,5 +10,14 @@ class Expression extends SimpleNode {
     super(p, id);
   }
 
+  public void execute() {
+    System.out.println("Execute Expression");
+
+
+    for(int i=0; i < children.length; i++) {
+      children[i].execute();
+    }
+    
+  }
 }
 /* JavaCC - OriginalChecksum=0fc795c4d90a18d9dfaa0f5220f7a94b (do not edit this line) */

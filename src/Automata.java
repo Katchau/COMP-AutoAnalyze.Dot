@@ -20,6 +20,11 @@ public class Automata {
 	private final Pattern endState = Pattern.compile(".*_end.*");
 	private final Pattern startState = Pattern.compile(".*start.*");
 	
+
+	public Automata () {
+		
+	}
+
 	public Automata(String fileName){
 		if(!importAutomata(fileName))
 			return;
@@ -130,5 +135,83 @@ public class Automata {
 		} finally {
 			fs.removeSink(g);
 		}
+	}
+
+// needs  test
+	public Automata complement() {
+		Automata out = new Automata();
+		out.start = start;
+		out.g = new DefaultGraph("!");
+
+		for(int i = 0; i < g.getNodeCount(); i++){
+			Node n = g.getNode(i);
+			String nodeOppType = reverseNode(n);
+			out.g.addNode(nodeOppType);
+		}
+
+		for(int i = 0; i <  g.getEdgeCount(); i++){
+			Edge e = g.getEdge(i);
+			Node start = e.getNode0();
+			Node end = e.getNode1();
+
+			String startNodeType = reverseNode(start);
+			String endNodeType = reverseNode(end);
+			g.addEdge(e.getId(), startNodeType, endNodeType, true);
+		}
+
+		return out;
+	}
+
+	// MORGAN LAW -> L1 ∩ L2 = not(not(L1) ∪ not(L2))
+	/*public Automata diff(Automata in) {
+			
+		Automata notL1 = this.complement();
+		Automata notL2 = in.complement();
+		Automata union = notL1.Union(notL2);
+		Automata diff = union.complement();
+		return diff;	
+	}*/
+
+	//TODO 
+	//Todo sameState
+	//TODO test
+	public Automata union ( Automata in ) {
+		Automata out = new Automata();
+		out.g = new DefaultGraph("union");
+
+		// create nodes // DFA1 X DFA2
+		for(int i = 0; i < g.getNodeCount(); i++){
+			Node n = g.getNode(i);
+			String nodeType = n.getId();
+
+			for (int k = 0;k  < in.g.getNodeCount(); k++) {
+				Node nIN = in.g.getNode(k);
+	
+				String newNode = nodeType + " "+nIN.getId();
+				out.g.addNode(newNode);
+			}
+		}
+
+		//add edges
+		//TODO ter o alfabeto alf
+		//Para cada Nó X,Y  -(alf[i])->  Xn,Yn
+		// adicionar aresta
+		for(int i = 0; i < g.getEdgeCount(); i++) {
+
+		}
+
+		//estados finais dois estados terminais do DFA1 x DFA2
+		return out;
+	}
+
+	private String reverseNode(Node n){
+		String nodeType = n.getId();
+			if(endState.matcher(nodeType).matches()){
+				nodeType.replaceAll("_end", ""); //removes end tag
+			}
+			else {
+				nodeType = nodeType + "_end"; // add end tag
+			}
+		return nodeType;
 	}
 }
