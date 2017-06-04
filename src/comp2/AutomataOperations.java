@@ -53,7 +53,7 @@ public class AutomataOperations {
 	private static ArrayList<String> getNewStates(Automata a, String curr){
 		ArrayList<String> oldStates = new ArrayList<>(Arrays.asList(curr.split("%")));
 		ArrayList<String> newStates = new ArrayList<>();
-		oldStates.remove(0);//o 1º é um espaço
+		oldStates.remove(0);//o 1ï¿½ ï¿½ um espaï¿½o
 		for(String trans: a.transValues){
 			HashSet<String> tmpStates = new HashSet<>();
 			for(String s : oldStates){
@@ -211,6 +211,34 @@ public class AutomataOperations {
         return out;
     }
 
+
+	public static Automata getReverse(Automata in) {
+		Automata out = new Automata();
+		out.start = in.start; //isto tem que ser o epsilon TODO
+		Graph g = in.g;
+		out.g = new DefaultGraph("reversed");
+
+		for(int i = 0; i < in.g.getNodeCount(); i++){
+			Node n = in.g.getNode(i);
+			String nodeOppType = reverseNode(n);
+			out.g.addNode(nodeOppType);
+		}
+
+		for(int i = 0; i <  g.getEdgeCount(); i++){
+			Edge e = g.getEdge(i);
+			Node start = e.getNode1();
+			Node end = e.getNode0();
+
+			String startNodeType = reverseNode(start);
+			String endNodeType = reverseNode(end);
+			out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
+			out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
+		}
+		//TODO remove
+		exportAutomata(out.g,"lmao2.dot");
+		return out;
+	}
+	
     // MORGAN LAW -> L1 ? L2 = not(not(L1) ? not(L2))
 	/*public Automata diff(Automata in) {
 
