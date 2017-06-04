@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.DefaultGraph;
+import org.graphstream.graph.implementations.Graphs;
+import org.graphstream.stream.Source;
 import org.graphstream.stream.file.FileSinkDOT;
 
 public class AutomataOperations {
@@ -220,7 +222,8 @@ public class AutomataOperations {
 
 		for(int i = 0; i < in.g.getNodeCount(); i++){
 			Node n = in.g.getNode(i);
-			String nodeOppType = reverseNode(n);
+			String nodeOppType = n.getId().equals("new-death-node") ?
+                        n.getId() : reverseNode(n);
 			out.g.addNode(nodeOppType);
 		}
 
@@ -231,8 +234,15 @@ public class AutomataOperations {
 
 			String startNodeType = reverseNode(start);
 			String endNodeType = reverseNode(end);
-			out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
-			out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
+
+			if(start.getId().equals("new-death-node")) {
+                out.g.addEdge(e.getId(), endNodeType, start.getId() , true);
+            } else if(end.getId().equals("new-death-node")) {
+                out.g.addEdge(e.getId(), start.getId(), startNodeType, true);
+            } else {
+                out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
+            }
+            out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
 		}
 		//TODO remove
 		exportAutomata(out.g,"lmao2.dot");
@@ -325,11 +335,82 @@ public class AutomataOperations {
         exportAutomata(out.g,"lmao3.dot");
         return out;
     }
+    public static Automata getConcatenate(Automata a, Automata b) {
+        Automata out = new Automata();
+        out.g = new DefaultGraph("");
+        out.start = a.start;
+        ArrayList<String> endsA = new ArrayList<String>();
 
+        int intermediateCount = 0;
+        for(int i = 0; i < a.g.getNodeCount(); i++) {
+            Node nA = a.g.getNode(i);
+            String nAtype = nA.getId();
+
+            //store endpoints to add automata b
+            if(Automata.endState.matcher(nAtype).matches()) {
+                nAtype = reverseNode(nA);
+                endsA.add(nAtype);
+            }
+            if(nAtype.contains("intermidiate")){
+                intermediateCount++;
+            }
+            out.g.addNode(nAtype);
+        }
+
+        //add node and remove endstate
+        for(int i = 0; i< a.g.getEdgeCount(); i++) {
+            Edge nA = a.g.getEdge(i);
+            Node source = nA.getNode0();
+            Node dest = nA.getNode1();
+            String sourceName = (Automata.endState.matcher(source.getId()).matches()) ? reverseNode(source) : source.getId();
+            String destName = (Automata.endState.matcher(dest.getId()).matches()) ? reverseNode(dest) : dest.getId();
+            out.g.addEdge(sourceName+destName, sourceName, destName, true);
+            out.g.getEdge(sourceName+destName).setAttribute("label",nA.getAttribute("label").toString());
+        }
+
+        // add all node non start
+        HashMap<String,String> tracker = new HashMap<String,String>();
+        for(int i = 0; i < b.g.getNodeCount(); i++) {
+            Node nB = b.g.getNode(i);
+            String nBtype = nB.getId();
+
+            if(Automata.startState.matcher(nB.getId()).matches()) {
+                System.out.println("starter");
+                String newName = nBtype.replaceAll("start","") + "intermidiate" + intermediateCount;
+                intermediateCount++;
+                tracker.put(nBtype,newName);
+                out.g.addNode(newName);
+                for(String end: endsA){
+                    out.g.addEdge(newName+end,end, newName,true);
+                    out.g.getEdge(newName+end).setAttribute("label","epsilon");
+                }
+            } else {
+                out.g.addNode(nBtype);
+            }
+        }
+
+        for(int i = 0; i < b.g.getEdgeCount(); i++) {
+            Edge edgeB = b.g.getEdge(i);
+            String source = edgeB.getNode0().getId();
+            String dest = edgeB.getNode1().getId();
+
+            if(Automata.startState.matcher(source).matches()) {
+                source = tracker.get(source);
+            }
+            if(Automata.startState.matcher(dest).matches()) {
+                dest = tracker.get(dest);
+            }
+            out.g.addEdge(source+dest, source,dest,true);
+            out.g.getEdge(source+dest).setAttribute("label", edgeB.getAttribute("label").toString());
+        }
+        return out;
+    }
     private static String reverseNode(Node n){
         String nodeType = n.getId();
         nodeType = (Automata.endState.matcher(nodeType).matches()) ?
                 nodeType.replaceAll("_end", "") : nodeType + "_end";
         return nodeType;
     }
+
+
 }

@@ -1,0 +1,6 @@
+digraph graphname {
+                start -> b [label="a"];
+                b -> a [label="a"];
+                b -> b [label="b"];
+                a -> a [label="a"];
+        }
