@@ -1,8 +1,5 @@
 digraph graphname { 
-                start -> "1" [label="a"];
-                start -> "2" [label="b"];
-				"1" -> "2" [label="a"];
-				"1" -> start [label="b"];
-                "2" -> "3_end" [label="a"];
-                "2" -> "1" [label="b"];
+                start -> "1" [label="a,b"];
+				"1" -> "2" [label="a,b"];
+				"2" -> "3_end" [label="epsilon"];
 }

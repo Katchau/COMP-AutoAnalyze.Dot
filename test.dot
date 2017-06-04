@@ -3,13 +3,13 @@ digraph graphname {
 				start -> "7" [label="epsilon"];
 				"1" -> "2" [label="epsilon"];
 				"1" -> "4" [label="epsilon"];
-				"2" -> "3" [label="a"];
-				"4" -> "5" [label="b"];
+				"2" -> "3" [label="vagina"];
+				"4" -> "5" [label="penis"];
 				"3" -> "6" [label="epsilon"];
 				"5" -> "6" [label="epsilon"];
 				"6" -> "7" [label="epsilon"];
 				"6" -> "1" [label="epsilon"];
-				"7" -> "8" [label="a"];
-				"8" -> "9" [label="b"];
-                "9" -> "10_end" [label="b"];
+				"7" -> "8" [label="vagina"];
+				"8" -> "9" [label="penis"];
+                "9" -> "10_end" [label="penis"];
 }

@@ -65,27 +65,29 @@ public class Automata {
 		ArrayList<String> transactions = new ArrayList<String>();
 		while(edges.hasNext()){
 			Edge e = edges.next();
-			String transs = e.getAttribute("label").toString().split(",");
-			if(transs == null) {
+			String[] transs = e.getAttribute("label").toString().split(",");
+			if(transs.length == 0) {
 				System.err.println("Error: No transaction value!");
 				return false;
 			}
 			String endNode = e.getTargetNode().getId();
 			if(endNode.equals(g.getNode(i).getId()) && !endNode.equals(e.getSourceNode().getId()))continue;
-			if(transactions.contains(trans))
-				type = 2;
-			transactions.add(trans);
-			if(trans.equals("epsilon") || trans.equals("Epsilon")){
-				type = 3;
-			}
-			else if(i != 0 && !transValues.contains(trans)){
-				if(type < 1)type = 1;
-				transValues.add(trans);
-			}
-			else if(i == 0)
-				transValues.add(trans);
+			for(String trans : transs){
+                if(transactions.contains(trans))
+                    type = 2;
+                transactions.add(trans);
+                if(trans.equals("epsilon") || trans.equals("Epsilon")){
+                    type = 3;
+                }
+                else if(i != 0 && !transValues.contains(trans)){
+                    if(type < 1)type = 1;
+                    transValues.add(trans);
+                }
+                else if(i == 0)
+                    transValues.add(trans);
+            }
 		}
-		if(transactions.size() < transValues.size())
+		if(transactions.size() < transValues.size() && type == 0)
 		    type = 1;
 		return true;
 	}

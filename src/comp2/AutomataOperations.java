@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
+import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.stream.file.FileSinkDOT;
 
@@ -15,13 +13,16 @@ public class AutomataOperations {
 	private static String getEClosure(Node n, String currState){
 		String states = currState + "%" + n.getId();
 		for(Edge e : n.getEachEdge()){
-			String trans = e.getAttribute("label");
-			if(trans.equals("epsilon") || trans.equals("Epsilon")){
-				String endNode = e.getTargetNode().getId();
-				if(endNode.equals(n.getId()))continue;
-				if(states.contains(endNode))continue;
-				states = getEClosure(e.getTargetNode(),states); 
-			}
+			String[] transs = e.getAttribute("label").toString().split(",");
+			for(String trans : transs){
+                if(trans.equals("epsilon") || trans.equals("Epsilon")){
+                    String endNode = e.getTargetNode().getId();
+                    if(endNode.equals(n.getId()))continue;
+                    if(states.contains(endNode))continue;
+                    states = getEClosure(e.getTargetNode(),states);
+                }
+            }
+
 		}
 		return states;
 	}
@@ -29,11 +30,13 @@ public class AutomataOperations {
 	private static ArrayList<Node> checkTransition(Node n, String transiction){
 		ArrayList<Node> finalState = new ArrayList<Node>();
 		for(Edge e : n.getEachEdge()){
-			String trans = e.getAttribute("label");
-			if(!trans.equals(transiction))continue;
-			String endNode = e.getTargetNode().getId();
-			if(endNode.equals(n.getId()) && !endNode.equals(e.getSourceNode().getId()))continue;
-			finalState.add(e.getTargetNode());
+			String[] transs = e.getAttribute("label").toString().split(",");
+			for(String trans : transs){
+                if(!trans.equals(transiction))continue;
+                String endNode = e.getTargetNode().getId();
+                if(endNode.equals(n.getId()) && !endNode.equals(e.getSourceNode().getId()))continue;
+                finalState.add(e.getTargetNode());
+            }
 		}
 		return finalState;
 	}
@@ -70,10 +73,15 @@ public class AutomataOperations {
 	private static void addNodeEdge(Graph g,String trans, String b4node, String state, boolean hasNew){
 		String newNode = state.replace("%", "-");
 		if(hasNew)g.addNode(newNode);
-		//System.out.println("Transaction From: " + b4node + " to " + newNode + " when: " + trans);
-		String edge = trans + "" + b4node + "" + newNode;
-		g.addEdge(edge, b4node, newNode, true);//<3 prof
-		g.getEdge(edge).setAttribute("label", trans);
+		String edge = b4node + "" + newNode;
+		try{
+            g.addEdge(edge, b4node, newNode, true);//<3 prof
+            g.getEdge(edge).setAttribute("label", trans);
+        }catch(EdgeRejectedException | IdAlreadyInUseException e){
+		    String transi = g.getEdge(edge).getAttribute("label");
+		    g.getEdge(edge).setAttribute("label",transi + "," + trans);
+        }
+
 	}
 
 	public static void addDeathState(Automata a, Graph g){
@@ -86,16 +94,22 @@ public class AutomataOperations {
             HashSet<String> states = new HashSet<>();
             while(edges.hasNext()){
                 Edge e = edges.next();
-                String trans = e.getAttribute("label");
+                String[] transs = e.getAttribute("label").toString().split(",");
                 String endNode = e.getTargetNode().getId();
                 if(endNode.equals(startNode) && !endNode.equals(e.getSourceNode().getId()))continue;
-                states.add(trans);
+                states.addAll(Arrays.asList(transs));
+
             }
             if(states.size() < a.transValues.size()){
                 for(String trans : a.transValues){
                     if(!states.contains(trans)){
                         addNodeEdge(g,trans,startNode,"new-death-node",!hasDeath);
-                        hasDeath = true;
+                        if(!hasDeath){
+                            for(String s : a.transValues){
+                                addNodeEdge(g,s,"new-death-node","new-death-node",false);
+                            }
+                            hasDeath = true;
+                        }
                     }
                 }
             }
@@ -103,7 +117,7 @@ public class AutomataOperations {
     }
 
 	public static void convert2DFA(Automata a){
-		if(a.type < 1)return;
+		Automata newA = new Automata();
 		Graph ret = new DefaultGraph(a.g.getId());
 		String start = getEClosure(a.start,"");
 		HashMap<String, Boolean> states = new HashMap<String, Boolean>();
@@ -130,24 +144,29 @@ public class AutomataOperations {
 			}
 			states.put(curr, true);
 		}
-		addDeathState(a,ret);
+		newA.g = ret;
+		newA.transValues = a.transValues;
+		addDeathState(newA,ret);
         ret.display();
+        exportAutomata(ret,"lmao3.dot");
 	}
 	
 	//verify tem de ser do genero trans1%trans2%trans3
 	//converter para dfa antes :)
 	public static boolean acceptString(Automata a, String verify){
-		ArrayList<String> transactions = new ArrayList<String>(Arrays.asList(verify.split("%")));
+		ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split("%")));
 		Node n = a.start;
 		for(String trans : transactions){
 			boolean hasT = false;
 			for(Edge e : n.getEachEdge()){
 				Node end = e.getTargetNode();
 				if(end.equals(n) && !end.equals(e.getSourceNode()))continue;
-				if(trans.equals(e.getAttribute("label"))){
-					hasT = true;
-					n = end;
-					break;
+				for(String s : e.getAttribute("label").toString().split(",")){
+                    if(trans.equals(s)) {
+                        hasT = true;
+                        n = end;
+                        break;
+                    }
 				}
 			}
 			if(!hasT) return false;
