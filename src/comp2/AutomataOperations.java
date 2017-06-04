@@ -244,8 +244,6 @@ public class AutomataOperations {
             }
             out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
 		}
-		//TODO remove
-		exportAutomata(out.g,"lmao2.dot");
 		return out;
 	}
 	
@@ -258,6 +256,130 @@ public class AutomataOperations {
 		Automata diff = union.complement();
 		return diff;
 	}*/
+
+    private static boolean isFinalInter(String state){
+        String test = state + "-";
+        String[] test2 = test.split("_end");
+        if(test2.length > 2)
+            return true;
+        return false;
+    }
+
+    public static Automata getIntersection(final Automata in1, final Automata in2){
+        Automata out = new Automata();
+        HashMap<String, String> replacements = new HashMap<>();
+        boolean valid = false;
+
+        out.g = new DefaultGraph("intersection");
+        String start = in1.start.getId() + "-" + in2.start.getId();
+        if(Automata.endState.matcher(start).matches()){
+            if(!isFinalInter(start)){
+                replacements.put(start.replace("_end","_fakend"),start);
+                start = start.replace("_end","fakend");
+            }
+            else valid = true;
+        }
+        out.g.addNode(start);
+        in1.start = out.g.getNode(0);
+
+        ArrayList<String> transactions = in1.transValues;
+        for(String s : in2.transValues){
+            if(!transactions.contains(s))
+                transactions.add(s);
+        }
+        out.transValues = transactions;
+        HashMap<String,Boolean> transf = new HashMap<>();
+        transf.put(out.g.getNode(0).getId().replace("-","%"),false);
+        while(transf.containsValue(false)) {
+            Node a = null;
+            Node b = null;
+            String curr = "";
+            for(String state: transf.keySet()){
+                curr = (!transf.get(state)) ? state : "";
+                if(!curr.equals(""))break;
+            }
+            transf.put(curr,true);
+            ArrayList<String> states = new ArrayList<>(Arrays.asList(curr.split("%")));
+            if(states.size() == 2){
+                if(replacements.containsKey(states.get(0)))
+                    a = in1.g.getNode(replacements.get(states.get(0)));
+                else a = in1.g.getNode(states.get(0));
+                if(replacements.containsKey(states.get(1)))
+                    b = in2.g.getNode(replacements.get(states.get(1)));
+                else b = in2.g.getNode(states.get(1));
+            }
+            else{
+                if(states.size() == 0)break;
+                if(curr.startsWith("%")) {
+                    if(replacements.containsKey(states.get(0)))
+                        b =  in2.g.getNode(replacements.get(states.get(0)).replace("%",""));
+                    else b =  in2.g.getNode(states.get(0).replace("%",""));
+                }
+                else {
+                    if(replacements.containsKey(states.get(0)))
+                        a = in1.g.getNode(replacements.get(states.get(0)));
+                    else a = in1.g.getNode(states.get(0));
+                }
+            }
+            if(a != null && b != null){
+                String source = curr.replace("%","-");
+                for(String trans : transactions){
+                    ArrayList<Node> t1 = checkTransition(a,trans);
+                    ArrayList<Node> t2 = checkTransition(b,trans);
+                    String target;
+                    if(t1.size() > 0 && t2.size() > 0){
+                        String n1 = t1.get(0).getId();
+                        String n2 = t2.get(0).getId();
+                        target = n1 + "%" + n2;
+                    }
+                    else{
+                        boolean meh = false;
+                        if(t1.size() == 0 && t2.size() == 0) continue;
+                        if(out.g.getNode(source) == null) source = a.getId() + "%" + b.getId();
+                        target = (t1.size() == 0) ? "%" + t2.get(0).getId() : t1.get(0).getId();
+                    }
+                    boolean addNode = out.g.getNode(target.replace("%","-")) == null;
+                    if(addNode){
+                        if(Automata.endState.matcher(target).matches()){
+                            if(!isFinalInter(target)){
+                                replacements.put(target.replace("_end","_fakend"),target);
+                                target = target.replace("_end","fakend");
+                            }
+                            else valid = true;
+                        }
+                        transf.put(target,false);
+                    }
+                    addNodeEdge(out.g,trans,source,target,addNode);
+                }
+            }
+            else{
+                if( a == null && b == null) continue;
+                Node c = (a == null) ? b : a;
+                String source = curr.replace("%","-");
+                for(String trans: transactions){
+                    ArrayList<Node> t = checkTransition(c,trans);
+                    if(t.size() > 0){
+                        String target = t.get(0).getId();
+                        if(a == null) target = "%" + target;
+                        boolean addNode = out.g.getNode(target.replace("%","-")) == null;
+                        if(addNode){
+                            if(Automata.endState.matcher(target).matches()){
+                                if(!isFinalInter(target)){
+                                    replacements.put(target.replace("_end","_fakend"),target);
+                                    target = target.replace("_end","fakend");
+                                }
+                                else valid = true;
+                            }
+                            transf.put(target,false);
+                        }
+                        addNodeEdge(out.g,trans,source,target,addNode);
+                    }
+                }
+            }
+        }
+        if(!valid)return null;
+        return out;
+    }
 
     public static Automata getUnion (final Automata in1, final Automata in2) {
         Automata out = new Automata();
