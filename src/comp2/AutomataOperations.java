@@ -116,7 +116,7 @@ public class AutomataOperations {
         }
     }
 
-	public static Automata convert2DFA(Automata a){
+	public static Automata convert2DFA(final Automata a){
 		Automata newA = new Automata();
 		Graph ret = new DefaultGraph(a.g.getId());
 		String start = getEClosure(a.start,"");
@@ -153,7 +153,7 @@ public class AutomataOperations {
 	
 	//verify tem de ser do genero trans1%trans2%trans3
 	//converter para dfa antes :)
-	public static boolean acceptString(Automata a, String verify){
+	public static boolean acceptString(final Automata a, String verify){
 		ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split("%")));
 		Node n = a.start;
 		for(String trans : transactions){
@@ -184,7 +184,7 @@ public class AutomataOperations {
 		}
 	}
 
-    public static Automata getComplement(Automata in) {
+    public static Automata getComplement(final Automata in) {
         Automata out = new Automata();
         out.start = in.start;
         out.transValues = in.transValues;
