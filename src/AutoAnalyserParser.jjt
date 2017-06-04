@@ -67,11 +67,10 @@ void Expr1():{} {
 
     Expr2()[
         (
-            <SUM> Expr1() #Sum
-          | <CONCATENATION> Expr1() #Concatenation
-          | <INTERSECTION> Expr1() #Intersection
-          | <UNION> Expr1() #Union
-          | <DIFFERENCE> Expr1() #Difference
+           <CONCATENATION> Expr1() #Concatenation(2)
+          | <INTERSECTION> Expr1() #Intersection(2)
+          | <UNION> Expr1() #Union(2)
+          | <DIFFERENCE> Expr1() #Difference(2)
         )
     ]
 }
