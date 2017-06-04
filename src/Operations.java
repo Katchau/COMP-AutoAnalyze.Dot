@@ -10,14 +10,24 @@ class Operations extends SimpleNode {
     super(p, id);
   }
 
-  public void execute() {
-    System.out.println("Execute OPERATIONS");
-
+  public Automata execute() {
+    String varName = "";
 
     for(int i=0; i < children.length; i++) {
-      children[i].execute();
+      if(children[i] instanceof Identifier){
+        System.out.println(((Identifier) children[i]).name);
+        varName = ((Identifier) children[i]).name;
+      } else if(children[i] instanceof Expression) {
+        children[i].execute();
+      } else if(children[i] instanceof Accept){
+        System.out.println("Accept Case");
+      } else if(children[i] instanceof Input){
+        System.out.println(((Input) children[i]).name);
+      } else {
+        System.out.println("Shouldn't go here");
+      }
     }
-
+    return null;
   }
 }
 /* JavaCC - OriginalChecksum=a7204e20a77e3b9c22fffa6547326ffd (do not edit this line) */

@@ -4,7 +4,7 @@ public
 class Filename extends SimpleNode {
 
    public String name = null;
-   
+
   public Filename(int id) {
     super(id);
   }
@@ -13,8 +13,9 @@ class Filename extends SimpleNode {
     super(p, id);
   }
 
-  public void execute() {
+  public Automata execute() {
         System.out.println("FILENAME");
+        return null;
     }
 
     public Object jjtGetValue() { return name; }

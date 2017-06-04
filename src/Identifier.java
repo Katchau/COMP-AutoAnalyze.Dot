@@ -14,8 +14,9 @@ class Identifier extends SimpleNode {
   }
 
 
-    public void execute() {
+    public Automata execute() {
         System.out.println("IDENTIFIER");
+        return null;
     }
 
     public Object jjtGetValue() { return name; }

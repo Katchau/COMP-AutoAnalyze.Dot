@@ -10,14 +10,17 @@ class Expression extends SimpleNode {
     super(p, id);
   }
 
-  public void execute() {
-    System.out.println("Execute Expression");
-
+  public Automata execute() {
+    Automata res = null;
 
     for(int i=0; i < children.length; i++) {
-      children[i].execute();
+      if (children[i] instanceof Expr1){
+        res = children[i].execute();
+      } else {
+        System.out.println("Shouldn't go here1");
+      }
     }
-    
+    return res;
   }
 }
 /* JavaCC - OriginalChecksum=0fc795c4d90a18d9dfaa0f5220f7a94b (do not edit this line) */

@@ -10,15 +10,20 @@ class Expr3 extends SimpleNode {
     super(p, id);
   }
 
-  public void execute() {
-    System.out.println("Execute Expr3");
-
+  public Automata execute() {
+    Automata res = null;
 
     for(int i=0; i < children.length; i++) {
-      children[i].execute();
+      if (children[i] instanceof Identifier){
+        res = Start.curAutomatas.get(((Identifier) children[i]).name);
+        System.out.println(((Identifier) children[i]).name);
+      } else if(children[i] instanceof Expr1) {
+        res = children[i].execute();
+      } else {
+        System.out.println("Shouldn't go here4");
+      }
     }
-    
+    return res;
   }
-
 }
 /* JavaCC - OriginalChecksum=ff5c9608531dc23ec8680c5c5a120da4 (do not edit this line) */

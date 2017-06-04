@@ -10,5 +10,18 @@ class Difference extends SimpleNode {
     super(p, id);
   }
 
+  public Automata execute(){
+    for(int i=0; i < children.length; i++) {
+      if (children[i] instanceof Identifier){
+        System.out.println(((Identifier) children[i]).name);
+      } else if (children[i] instanceof Expr1){
+        children[i].execute();
+      } else {
+        System.out.println(children[i]);
+      }
+    }
+    return null;
+  }
+
 }
 /* JavaCC - OriginalChecksum=4a439b02e328d7d81e444274e104f168 (do not edit this line) */

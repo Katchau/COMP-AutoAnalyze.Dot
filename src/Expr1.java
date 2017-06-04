@@ -10,14 +10,30 @@ class Expr1 extends SimpleNode {
     super(p, id);
   }
 
- public void execute() {
-    System.out.println("Execute Expr1");
-
+ public Automata execute() {
+   Automata first = null;
+   Automata res = null;
 
     for(int i=0; i < children.length; i++) {
-      children[i].execute();
+      if (children[i] instanceof Expr2){
+        first = children[i].execute();
+      } else if (children[i] instanceof Sum){
+        res = children[i].execute();
+      } else if (children[i] instanceof Concatenation){
+        res = children[i].execute();
+      } else if (children[i] instanceof Intersection){
+        res = children[i].execute();
+      } else if (children[i] instanceof Union){
+        res = children[i].execute();
+      } else if (children[i] instanceof Difference){
+        res = children[i].execute();
+      } else {
+        System.out.println("Shouldn't go here2");
+      }
     }
-    
+    if (res == null)
+      return first;
+    return res;
   }
 }
 /* JavaCC - OriginalChecksum=b245cbe223e1688cfdbdf42df5c0c1ff (do not edit this line) */

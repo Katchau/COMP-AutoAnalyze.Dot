@@ -10,5 +10,18 @@ class Union extends SimpleNode {
     super(p, id);
   }
 
+  public Automata execute(){
+    for(int i=0; i < children.length; i++) {
+      if (children[i] instanceof Identifier){
+        System.out.println(((Identifier) children[i]).name);
+      } else if (children[i] instanceof Expr1){
+        children[i].execute();
+      } else {
+        System.out.println(children[i]);
+      }
+    }
+    return null;
+  }
+
 }
 /* JavaCC - OriginalChecksum=9b7c56766f2c48096224f1bf573dae0e (do not edit this line) */

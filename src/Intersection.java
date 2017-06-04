@@ -10,5 +10,18 @@ class Intersection extends SimpleNode {
     super(p, id);
   }
 
+  public Automata execute(){
+    for(int i=0; i < children.length; i++) {
+      if (children[i] instanceof Identifier){
+        System.out.println(((Identifier) children[i]).name);
+      } else if (children[i] instanceof Expr1){
+        children[i].execute();
+      } else {
+        System.out.println(children[i]);
+      }
+    }
+    return null;
+  }
+
 }
 /* JavaCC - OriginalChecksum=47f8257f2ff939d70d470d42c65ff8fb (do not edit this line) */
