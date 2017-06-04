@@ -9,9 +9,10 @@ cp ./src/*.jj ./bin
 cp ./src/*.jjt ./bin
 cd ./bin
 jjtree AutoAnalyserParser.jjt
-javacc AutoAnalyserParser.jj
+javacc.sh AutoAnalyserParser.jj
 javac -cp "*.jar:../libs/*" *.java
 find . -name "*.java" -type f -delete
 find . -name "*.jj" -type f -delete
 find . -name "*.jjt" -type f -delete
 java -cp .:"*.jar:../libs/*" AutoAnalyser
+#java -cp .:"*.jar:../libs/*" Gui
