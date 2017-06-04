@@ -6,5 +6,5 @@ digraph graphname {
                 "2" -> "3_end" [label="a"];
                 "2" -> "1" [label="b"];
 				"3_end" -> "1" [label="a"];
-				"3_end" -> "2" [label="a"];
+				"3_end" -> "2" [label="b"];
 }

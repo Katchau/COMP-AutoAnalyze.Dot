@@ -205,7 +205,7 @@ public class AutomataOperations {
             String startNodeType = reverseNode(start);
             String endNodeType = reverseNode(end);
             out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
-            out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label"));
+            out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
         }
 
         return out;
@@ -236,6 +236,9 @@ public class AutomataOperations {
         }
         out.transValues = transactions;
         int max = (in1.g.getNodeCount() > in2.g.getNodeCount()) ? in1.g.getNodeCount() : in2.g.getNodeCount();
+        HashMap<String,String> transf = new HashMap<>();
+        transf.put(in1.start.getId(), out.g.getNode(0).getId());
+        transf.put(in2.start.getId(), out.g.getNode(0).getId());
         for(int i = 0; i < max; i++) {
             Node a = null;
             Node b = null;
@@ -255,31 +258,37 @@ public class AutomataOperations {
                         source = a.getId() + " " + b.getId();
                         String n1 = t1.get(0).getId();
                         String n2 = t2.get(0).getId();
-                        target = n1 + " " + n2 + " " + trans;
+                        target = n1 + " " + n2;
                     }
                     else{
+                        if(t1.size() == 0 && t2.size() == 0) continue;
                         source = (t1.size() > 0) ? a.getId() : b.getId();
                         if(out.g.getNode(source) == null) source = a.getId() + " " + b.getId();
-                        if(t1.size() == 0 && t2.size() == 0) continue;
                         target = (t1.size() == 0) ? t2.get(0).getId() : t1.get(0).getId();
-                        target += " " + trans;
                     }
                     if(i == 0) source = a.getId() + " " + b.getId();
-                    if(i != 0) source += " " + trans;
                     boolean addNode = out.g.getNode(target) == null;
+                    if(addNode && i != 0){
+                        transf.put(a.getId(),target);
+                        transf.put(b.getId(),target);
+                    }
                     addNodeEdge(out.g,trans,source,target,addNode);
                 }
             }
             else{
                 if( a == null && b == null) continue;
                 String source = (a == null) ? b.getId() : a.getId();
+                if(transf.containsValue(source)) source = transf.get(source);
                 Node c = (a == null) ? b : a;
                 for(String trans: transactions){
                     ArrayList<Node> t = checkTransition(c,trans);
                     if(t.size() > 0){
-                        source += " " + trans;
                         String target = t.get(0).getId();
+                        if(transf.containsValue(target)) target = transf.get(target);
                         boolean addNode = out.g.getNode(target) == null;
+                        if(addNode && i != 0){
+                            transf.put(c.getId(),target);
+                        }
                         addNodeEdge(out.g,trans,source,target,addNode);
                     }
                 }

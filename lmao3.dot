@@ -1,10 +1,18 @@
 digraph {
-	"-start" ;
-	"-1" ;
-	"-2-3_end" ;
+	"start start" ;
+	"2 2" ;
+	"1 1" ;
+	"3_end 3_end" ;
+	"2 new-death-node" ;
+	"1 new-death-node" ;
 	"new-death-node" ;
-	"-start" -> "-1" ["label"="a,b"];
-	"-1" -> "-2-3_end" ["label"="a,b"];
-	"-2-3_end" -> "new-death-node" ["label"="a,b"];
-	"new-death-node" -> "new-death-node" ["label"="a,b"];
+	"start start" -> "2 2" ["label"="b"];
+	"start start" -> "1 1" ["label"="a"];
+	"1 1" -> "start start" ["label"="b"];
+	"1 1" -> "2 2" ["label"="a"];
+	"2 2" -> "1 1" ["label"="b"];
+	"2 2" -> "3_end 3_end" ["label"="a"];
+	"3_end 3_end" -> "2 new-death-node" ["label"="b"];
+	"3_end 3_end" -> "1 new-death-node" ["label"="a"];
+	"new-death-node" -> "new-death-node" ["label"="b,a"];
 }
