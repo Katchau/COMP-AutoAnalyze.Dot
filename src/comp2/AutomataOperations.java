@@ -186,6 +186,19 @@ public class AutomataOperations {
 		}
 	}
 
+	private static Automata getDfa(Automata out){
+        out.getAutomataType();
+        if(out.type > 1)
+            return AutomataOperations.convert2DFA(out);
+        else{
+            if(out.type == 1) {
+                out.type = 0;
+                AutomataOperations.addDeathState(out, out.g);
+            }
+            return out;
+        }
+    }
+
     public static Automata getComplement(final Automata in) {
         Automata out = new Automata();
         out.start = in.start;
@@ -212,7 +225,6 @@ public class AutomataOperations {
 
         return out;
     }
-
 
 	public static Automata getReverse(Automata in) {
 		Automata out = new Automata();
@@ -244,18 +256,15 @@ public class AutomataOperations {
             }
             out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
 		}
-		return out;
+        return getDfa(out);
 	}
 	
     // MORGAN LAW -> L1 ? L2 = not(not(L1) ? not(L2))
-	/*public Automata diff(Automata in) {
-
-		Automata notL1 = this.complement();
-		Automata notL2 = in.complement();
-		Automata union = notL1.Union(notL2);
-		Automata diff = union.complement();
-		return diff;
-	}*/
+	public Automata getDifference(final Automata in1,final Automata in2) {
+        Automata comp = getComplement(in2);
+        Automata diff = getIntersection(in1,comp);
+		return getDfa(diff);
+	}
 
     private static boolean isFinalInter(String state){
         String test = state + "-";
@@ -378,7 +387,7 @@ public class AutomataOperations {
             }
         }
         if(!valid)return null;
-        return out;
+        return getDfa(out);
     }
 
     public static Automata getUnion (final Automata in1, final Automata in2) {
@@ -455,9 +464,10 @@ public class AutomataOperations {
                 }
             }
         }
-        return out;
+        return getDfa(out);
     }
-    public static Automata getConcatenate(Automata a, Automata b) {
+
+    public static Automata getConcatenate(final Automata a,final Automata b) {
         Automata out = new Automata();
         out.g = new DefaultGraph("a");
         out.start = a.start;
@@ -526,9 +536,9 @@ public class AutomataOperations {
             out.g.addEdge(source+dest, source,dest,true);
             out.g.getEdge(source+dest).setAttribute("label", edgeB.getAttribute("label").toString());
         }
-        out.getAutomataType();
-        return  AutomataOperations.convert2DFA(out);
+        return getDfa(out);
     }
+
     private static String reverseNode(Node n){
         String nodeType = n.getId();
         nodeType = (Automata.endState.matcher(nodeType).matches()) ?
