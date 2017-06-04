@@ -55,7 +55,7 @@ public class AutomataOperations {
 	private static ArrayList<String> getNewStates(Automata a, String curr){
 		ArrayList<String> oldStates = new ArrayList<>(Arrays.asList(curr.split("%")));
 		ArrayList<String> newStates = new ArrayList<>();
-		oldStates.remove(0);//o 1� � um espa�o
+		oldStates.remove(0);//first is a space
 		for(String trans: a.transValues){
 			HashSet<String> tmpStates = new HashSet<>();
 			for(String s : oldStates){
@@ -118,11 +118,11 @@ public class AutomataOperations {
         }
     }
 
-	public static void convert2DFA(Automata a){
+	public static Automata convert2DFA(final Automata a){
 		Automata newA = new Automata();
 		Graph ret = new DefaultGraph(a.g.getId());
 		String start = getEClosure(a.start,"");
-		HashMap<String, Boolean> states = new HashMap<String, Boolean>();
+		HashMap<String, Boolean> states = new HashMap<>();
 		ret.addNode(start.replace("%", "-"));
 		states.put(start, false);
 		while(states.containsValue(false)){
@@ -148,14 +148,14 @@ public class AutomataOperations {
 		}
 		newA.g = ret;
 		newA.transValues = a.transValues;
+        newA.start = newA.g.getNode(start);
 		addDeathState(newA,ret);
-        ret.display();
-        exportAutomata(ret,"lmao3.dot");
+        return newA;
 	}
 	
 	//verify tem de ser do genero trans1%trans2%trans3
 	//converter para dfa antes :)
-	public static boolean acceptString(Automata a, String verify){
+	public static boolean acceptString(final Automata a, String verify){
 		ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split("%")));
 		Node n = a.start;
 		for(String trans : transactions){
@@ -186,7 +186,7 @@ public class AutomataOperations {
 		}
 	}
 
-    public static Automata getComplement(Automata in) {
+    public static Automata getComplement(final Automata in) {
         Automata out = new Automata();
         out.start = in.start;
         out.transValues = in.transValues;
@@ -259,12 +259,10 @@ public class AutomataOperations {
 		return diff;
 	}*/
 
-
-
     public static Automata getUnion (final Automata in1, final Automata in2) {
         Automata out = new Automata();
         out.g = new DefaultGraph("union");
-        out.g.addNode(in1.start.getId() + " " + in2.start.getId());
+        out.g.addNode(in1.start.getId() + "-" + in2.start.getId());
         in1.start = out.g.getNode(0);
 
         ArrayList<String> transactions = in1.transValues;
@@ -273,66 +271,68 @@ public class AutomataOperations {
                 transactions.add(s);
         }
         out.transValues = transactions;
-        int max = (in1.g.getNodeCount() > in2.g.getNodeCount()) ? in1.g.getNodeCount() : in2.g.getNodeCount();
-        HashMap<String,String> transf = new HashMap<>();
-        transf.put(in1.start.getId(), out.g.getNode(0).getId());
-        transf.put(in2.start.getId(), out.g.getNode(0).getId());
-        for(int i = 0; i < max; i++) {
+        HashMap<String,Boolean> transf = new HashMap<>();
+        transf.put(out.g.getNode(0).getId().replace("-","%"),false);
+        while(transf.containsValue(false)) {
             Node a = null;
             Node b = null;
-
-            if(i < in1.g.getNodeCount())
-                a = in1.g.getNode(i);
-            if(i < in2.g.getNodeCount())
-                b = in2.g.getNode(i);
-
+            String curr = "";
+            for(String state: transf.keySet()){
+                curr = (!transf.get(state)) ? state : "";
+                if(!curr.equals(""))break;
+            }
+            transf.put(curr,true);
+            ArrayList<String> states = new ArrayList<>(Arrays.asList(curr.split("%")));
+            if(states.size() == 2){
+                a = in1.g.getNode(states.get(0));
+                b = in2.g.getNode(states.get(1));
+            }
+            else{
+                if(states.size() == 0)break;
+                if(curr.startsWith("%")) b =  in2.g.getNode(states.get(0).replace("%",""));
+                else a = in1.g.getNode(states.get(0));
+            }
             if(a != null && b != null){
-                String source;
+                String source = curr.replace("%","-");
                 for(String trans : transactions){
                     ArrayList<Node> t1 = checkTransition(a,trans);
                     ArrayList<Node> t2 = checkTransition(b,trans);
                     String target;
                     if(t1.size() > 0 && t2.size() > 0){
-                        source = a.getId() + " " + b.getId();
                         String n1 = t1.get(0).getId();
                         String n2 = t2.get(0).getId();
-                        target = n1 + " " + n2;
+                        target = n1 + "%" + n2;
                     }
                     else{
                         if(t1.size() == 0 && t2.size() == 0) continue;
-                        source = (t1.size() > 0) ? a.getId() : b.getId();
-                        if(out.g.getNode(source) == null) source = a.getId() + " " + b.getId();
-                        target = (t1.size() == 0) ? t2.get(0).getId() : t1.get(0).getId();
+                        if(out.g.getNode(source) == null) source = a.getId() + "%" + b.getId();
+                        target = (t1.size() == 0) ? "%" + t2.get(0).getId() : t1.get(0).getId();
                     }
-                    if(i == 0) source = a.getId() + " " + b.getId();
-                    boolean addNode = out.g.getNode(target) == null;
-                    if(addNode && i != 0){
-                        transf.put(a.getId(),target);
-                        transf.put(b.getId(),target);
+                    boolean addNode = out.g.getNode(target.replace("%","-")) == null;
+                    if(addNode){
+                        transf.put(target,false);
                     }
                     addNodeEdge(out.g,trans,source,target,addNode);
                 }
             }
             else{
                 if( a == null && b == null) continue;
-                String source = (a == null) ? b.getId() : a.getId();
-                if(transf.containsValue(source)) source = transf.get(source);
                 Node c = (a == null) ? b : a;
+                String source = curr.replace("%","-");
                 for(String trans: transactions){
                     ArrayList<Node> t = checkTransition(c,trans);
                     if(t.size() > 0){
                         String target = t.get(0).getId();
-                        if(transf.containsValue(target)) target = transf.get(target);
-                        boolean addNode = out.g.getNode(target) == null;
-                        if(addNode && i != 0){
-                            transf.put(c.getId(),target);
+                        if(a == null) target = "%" + target;
+                        boolean addNode = out.g.getNode(target.replace("%","-")) == null;
+                        if(addNode){
+                            transf.put(target,false);
                         }
                         addNodeEdge(out.g,trans,source,target,addNode);
                     }
                 }
             }
         }
-        exportAutomata(out.g,"lmao3.dot");
         return out;
     }
     public static Automata getConcatenate(Automata a, Automata b) {
