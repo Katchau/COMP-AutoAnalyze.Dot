@@ -10,5 +10,11 @@ class Accept extends SimpleNode {
     super(p, id);
   }
 
+  public Automata execute() {
+    for(int i=0; i < children.length; i++) {
+
+    }
+    return null;
+  }
 }
 /* JavaCC - OriginalChecksum=092406c825d9494b4ca9040bf5245eb7 (do not edit this line) */

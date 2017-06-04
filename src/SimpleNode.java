@@ -72,9 +72,8 @@ class SimpleNode implements Node {
       }
     }
   }
+  public Automata execute(){return null;}
 
-  public void execute() {
-  }
 }
 
 /* JavaCC - OriginalChecksum=d3e4a15061b204a819519a2041e3d059 (do not edit this line) */

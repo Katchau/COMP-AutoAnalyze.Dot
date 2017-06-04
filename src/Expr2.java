@@ -10,14 +10,19 @@ class Expr2 extends SimpleNode {
     super(p, id);
   }
 
-  public void execute() {
-    System.out.println("Execute Expr2");
-
+  public Automata execute() {
+    Automata res = null;
 
     for(int i=0; i < children.length; i++) {
-      children[i].execute();
+      if (children[i] instanceof Expr3){
+        res = children[i].execute();
+      } else if (children[i] instanceof Complement) {
+        res = children[i].execute();
+      } else {
+        System.out.println("Shouldn't go here3");
+      }
     }
-    
+    return res;
   }
 
 }

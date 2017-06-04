@@ -4,7 +4,7 @@ public
 class Input extends SimpleNode {
 
   String name = null;
-  
+
   public Input(int id) {
     super(id);
   }
@@ -13,8 +13,9 @@ class Input extends SimpleNode {
     super(p, id);
   }
 
-  public void execute() {
+  public Automata execute() {
       System.out.println("INPUT");
+      return null;
   }
 
   public Object jjtGetValue() { return name; }

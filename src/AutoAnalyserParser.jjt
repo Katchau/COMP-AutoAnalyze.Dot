@@ -54,7 +54,7 @@ void Operations() : {  } {
     Identifier()
     (
         <EQUAL> Expression()
-      | <ACCEPT> "(" Input() #input ")" #Accept
+      | <ACCEPT> "(" Input() ")" #Accept
     )
     <ENDLINE>
 }
