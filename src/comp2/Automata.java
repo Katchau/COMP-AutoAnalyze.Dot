@@ -17,7 +17,7 @@ public class Automata {
 	public Graph g;
 	public Node start;
 	private FileSource fs = null;
-	public ArrayList<String> transValues = new ArrayList<String>();
+	public ArrayList<String> transValues = new ArrayList<>();
 	protected static final Pattern endState = Pattern.compile(".*_end.*");
 	protected static final Pattern startState = Pattern.compile(".*start.*");
 	protected static final Pattern deathState = Pattern.compile(".*new-death-node.*");
@@ -65,8 +65,8 @@ public class Automata {
 		ArrayList<String> transactions = new ArrayList<String>();
 		while(edges.hasNext()){
 			Edge e = edges.next();
-			String trans = e.getAttribute("label");
-			if(trans == null) {
+			String transs = e.getAttribute("label").toString().split(",");
+			if(transs == null) {
 				System.err.println("Error: No transaction value!");
 				return false;
 			}

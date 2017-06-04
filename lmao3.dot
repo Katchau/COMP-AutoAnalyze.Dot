@@ -1,0 +1,13 @@
+digraph {
+	"start start" ;
+	"1 1 a" ;
+	"2 2 a" ;
+	"3_end 3_end a" ;
+	"me a" ;
+	"start" ;
+	"start start" -> "1 1 a" ["label"="a"];
+	"1 1 a" -> "2 2 a" ["label"="a"];
+	"2 2 a" -> "3_end 3_end a" ["label"="a"];
+	"3_end 3_end a" -> "me a" ["label"="a"];
+	"me a" -> "start" ["label"="a"];
+}

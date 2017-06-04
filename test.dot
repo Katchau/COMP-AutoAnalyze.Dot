@@ -12,4 +12,4 @@ digraph graphname {
 				"7" -> "8" [label="a"];
 				"8" -> "9" [label="b"];
                 "9" -> "10_end" [label="b"];
-        }
+}

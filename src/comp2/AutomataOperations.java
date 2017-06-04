@@ -32,7 +32,7 @@ public class AutomataOperations {
 			String trans = e.getAttribute("label");
 			if(!trans.equals(transiction))continue;
 			String endNode = e.getTargetNode().getId();
-			if(endNode.equals(n.getId()))continue;
+			if(endNode.equals(n.getId()) && !endNode.equals(e.getSourceNode().getId()))continue;
 			finalState.add(e.getTargetNode());
 		}
 		return finalState;
@@ -168,6 +168,7 @@ public class AutomataOperations {
     public static Automata getComplement(Automata in) {
         Automata out = new Automata();
         out.start = in.start;
+        out.transValues = in.transValues;
         Graph g = in.g;
         out.g = new DefaultGraph("!");
 
@@ -187,8 +188,7 @@ public class AutomataOperations {
             out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
             out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label"));
         }
-        //TODO remove
-        exportAutomata(out.g,"lmao2.dot");
+
         return out;
     }
 
@@ -202,47 +202,71 @@ public class AutomataOperations {
 		return diff;
 	}*/
 
-    //TODO
-    //Todo sameState
-    //TODO test
-    public static Automata union (Automata in1, Automata in2) {
+
+
+    public static Automata getUnion (final Automata in1, final Automata in2) {
         Automata out = new Automata();
         out.g = new DefaultGraph("union");
+        out.g.addNode(in1.start.getId() + " " + in2.start.getId());
+        in1.start = out.g.getNode(0);
 
-        // create nodes // DFA1 X DFA2
-        ArrayList<String[]> pairedNodes = new ArrayList<>();
-
-        for(int i = 0; i < in1.g.getNodeCount(); i++){
-            Node n = in1.g.getNode(i);
-            String nodeType = n.getId();
-
-            for (int k = 0;k  < in2.g.getNodeCount(); k++) {
-                Node nIN = in2.g.getNode(k);
-                String newNode = nodeType + " "+nIN.getId();
-                pairedNodes.add(new String[]{nodeType,nIN.getId()});
-                out.g.addNode(newNode);
-            }
+        ArrayList<String> transactions = in1.transValues;
+        for(String s : in2.transValues){
+            if(!transactions.contains(s))
+                transactions.add(s);
         }
+        out.transValues = transactions;
+        int max = (in1.g.getNodeCount() > in2.g.getNodeCount()) ? in1.g.getNodeCount() : in2.g.getNodeCount();
+        for(int i = 0; i < max; i++) {
+            Node a = null;
+            Node b = null;
 
-        for(int i = 0; i < in1.g.getEdgeCount(); i++) {
-            Edge e = in1.g.getEdge(i);
-            String sourceA = e.getNode0().getId();
-            String destA = e.getNode1().getId();
-            String value = e.getAttribute("label");
+            if(i < in1.g.getNodeCount())
+                a = in1.g.getNode(i);
+            if(i < in2.g.getNodeCount())
+                b = in2.g.getNode(i);
 
-            for( int k = 0; k < in2.g.getEdgeCount(); k++) {
-                Edge b = in2.g.getEdge(k);
-                String sourceB = b.getNode0().getId();
-                String destB = b.getNode1().getId();
-                String valueB = b.getAttribute("label");
-
-                if(value.equals(valueB)) {
-                    String source = sourceA + " " + sourceB;
-                    String dest = destA + " " + destB;
-                    out.g.addEdge(source+dest, source, dest, true );
+            if(a != null && b != null){
+                String source;
+                for(String trans : transactions){
+                    ArrayList<Node> t1 = checkTransition(a,trans);
+                    ArrayList<Node> t2 = checkTransition(b,trans);
+                    String target;
+                    if(t1.size() > 0 && t2.size() > 0){
+                        source = a.getId() + " " + b.getId();
+                        String n1 = t1.get(0).getId();
+                        String n2 = t2.get(0).getId();
+                        target = n1 + " " + n2 + " " + trans;
+                    }
+                    else{
+                        source = (t1.size() > 0) ? a.getId() : b.getId();
+                        if(out.g.getNode(source) == null) source = a.getId() + " " + b.getId();
+                        if(t1.size() == 0 && t2.size() == 0) continue;
+                        target = (t1.size() == 0) ? t2.get(0).getId() : t1.get(0).getId();
+                        target += " " + trans;
+                    }
+                    if(i == 0) source = a.getId() + " " + b.getId();
+                    if(i != 0) source += " " + trans;
+                    boolean addNode = out.g.getNode(target) == null;
+                    addNodeEdge(out.g,trans,source,target,addNode);
+                }
+            }
+            else{
+                if( a == null && b == null) continue;
+                String source = (a == null) ? b.getId() : a.getId();
+                Node c = (a == null) ? b : a;
+                for(String trans: transactions){
+                    ArrayList<Node> t = checkTransition(c,trans);
+                    if(t.size() > 0){
+                        source += " " + trans;
+                        String target = t.get(0).getId();
+                        boolean addNode = out.g.getNode(target) == null;
+                        addNodeEdge(out.g,trans,source,target,addNode);
+                    }
                 }
             }
         }
+        exportAutomata(out.g,"lmao3.dot");
         return out;
     }
 
