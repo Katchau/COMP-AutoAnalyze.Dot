@@ -1,18 +1,14 @@
 digraph {
-	"start start" ;
-	"2 2" ;
-	"1 1" ;
-	"3_end 3_end" ;
-	"2 new-death-node" ;
-	"1 new-death-node" ;
-	"new-death-node" ;
-	"start start" -> "2 2" ["label"="b"];
-	"start start" -> "1 1" ["label"="a"];
-	"1 1" -> "start start" ["label"="b"];
-	"1 1" -> "2 2" ["label"="a"];
-	"2 2" -> "1 1" ["label"="b"];
-	"2 2" -> "3_end 3_end" ["label"="a"];
-	"3_end 3_end" -> "2 new-death-node" ["label"="b"];
-	"3_end 3_end" -> "1 new-death-node" ["label"="a"];
-	"new-death-node" -> "new-death-node" ["label"="b,a"];
+	"start_end" ;
+	"1_end" ;
+	"2_end" ;
+	"3" ;
+	"start_end" -> "1_end" ["label"="a"];
+	"start_end" -> "2_end" ["label"="b"];
+	"1_end" -> "2_end" ["label"="a"];
+	"1_end" -> "start_end" ["label"="b"];
+	"2_end" -> "3" ["label"="a"];
+	"2_end" -> "1_end" ["label"="b"];
+	"3" -> "1_end" ["label"="a"];
+	"3" -> "2_end" ["label"="b"];
 }

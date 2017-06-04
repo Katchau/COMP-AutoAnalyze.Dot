@@ -222,7 +222,6 @@ public class AutomataOperations {
             out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
             out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
         }
-
         return out;
     }
 
@@ -260,9 +259,10 @@ public class AutomataOperations {
 	}
 	
     // MORGAN LAW -> L1 ? L2 = not(not(L1) ? not(L2))
-	public Automata getDifference(final Automata in1,final Automata in2) {
+	public static Automata getDifference(final Automata in1,final Automata in2) {
         Automata comp = getComplement(in2);
         Automata diff = getIntersection(in1,comp);
+        if(diff == null) return null;
 		return getDfa(diff);
 	}
 

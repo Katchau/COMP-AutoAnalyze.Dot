@@ -16,17 +16,10 @@ public class Teste {
             at2.type = 0;
             AutomataOperations.addDeathState(at2,at2.g);
         }
-        /*
-		Automata at = new Automata("teste.dot");
 
-		if(at.type > 1)AutomataOperations.convert2DFA(at);
-		else if(at.type == 1){
-		    at.type = 0;
-		    AutomataOperations.addDeathState(at,at.g);
-        }
-        */
-
-        AutomataOperations.getUnion(at1,at2);
+        Automata at = AutomataOperations.getDifference(at2,at1);
+        if(at == null) System.out.println("LMAO");
+        else AutomataOperations.exportAutomata(at.g,"lmao3.dot");
 	}
 
 }
