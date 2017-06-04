@@ -95,6 +95,7 @@ public class Automata {
 	public boolean getAutomataType(){
 		int startStates = 0;
 		int endStates = 0;
+		transValues = new ArrayList<>();
 		for(int i = 0; i < g.getNodeCount(); i++){
 			Node n = g.getNode(i);
 			String nodeType = n.getId();

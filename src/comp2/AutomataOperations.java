@@ -337,8 +337,9 @@ public class AutomataOperations {
     }
     public static Automata getConcatenate(Automata a, Automata b) {
         Automata out = new Automata();
-        out.g = new DefaultGraph("");
+        out.g = new DefaultGraph("a");
         out.start = a.start;
+
         ArrayList<String> endsA = new ArrayList<String>();
 
         int intermediateCount = 0;
@@ -403,7 +404,8 @@ public class AutomataOperations {
             out.g.addEdge(source+dest, source,dest,true);
             out.g.getEdge(source+dest).setAttribute("label", edgeB.getAttribute("label").toString());
         }
-        return out;
+        out.getAutomataType();
+        return  AutomataOperations.convert2DFA(out);
     }
     private static String reverseNode(Node n){
         String nodeType = n.getId();
