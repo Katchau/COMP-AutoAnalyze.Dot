@@ -227,20 +227,15 @@ public class AutomataOperations {
 
 	public static Automata getReverse(Automata in) {
 		Automata out = new Automata();
-		out.start = in.start; //isto tem que ser o epsilon TODO
+		
 		Graph g = in.g;
 		out.g = new DefaultGraph("$");
         HashMap<String,String> track = new HashMap<String,String>();
-        int startcount = 0;
-
+      
 		for(int i = 0; i < in.g.getNodeCount(); i++){
 			Node n = in.g.getNode(i);
-			String nodeOppType = n.getId().equals("new-death-node") ?
-                        n.getId() : reverseNodeReverse(n);
-            if(Automata.startState.matcher(n.getId()).matches()){
-                startcount++;
-            }
-
+			if(n.getId().contains("new-death-node")) continue;
+			String nodeOppType = reverseNodeReverse(n);
             if(Automata.endState.matcher(n.getId()).matches()){
                 track.put(n.getId(),nodeOppType);
             }
@@ -251,6 +246,8 @@ public class AutomataOperations {
 			Edge e = g.getEdge(i);
 			Node start = e.getNode1();
 			Node end = e.getNode0();
+
+			if(start.getId().contains("new-death-node") || end.getId().contains("new-death-node")) continue;
 
 			String startNodeType = reverseNodeReverse(start);
 			String endNodeType = reverseNodeReverse(end);
@@ -263,14 +260,17 @@ public class AutomataOperations {
 		}
 
 
-		out.g.addNode("start" + startcount);
+		out.g.addNode("start");
+        out.start = out.g.getNode("start"); 
         Iterator it = track.entrySet().iterator();
 
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry) it.next();
-            out.g.addEdge("start" + startcount + pair.getValue(),"start" + startcount, pair.getValue().toString());
+            String id = "start" + pair.getValue();
+            out.g.addEdge(id,"start", pair.getValue().toString(),true);
+            out.g.getEdge(id).setAttribute("label","epsilon");
         }
-        return getDfa(out);
+        return out;
 	}
 	
     // MORGAN LAW -> L1 ? L2 = not(not(L1) ? not(L2))
@@ -568,7 +568,10 @@ public class AutomataOperations {
     private static String reverseNodeReverse(Node n){
         String nodeType = n.getId();
         nodeType = (Automata.endState.matcher(nodeType).matches()) ?
-                nodeType.replaceAll("_end", "_start") : nodeType.replaceAll("start", "") + "_end";
+                nodeType.replaceAll("_end", "") :
+                (Automata.startState.matcher(nodeType).matches()) ?
+                nodeType.replaceAll("start","_end"):
+                nodeType;
         return nodeType;
     }
 

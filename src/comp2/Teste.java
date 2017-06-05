@@ -17,7 +17,8 @@ public class Teste {
             AutomataOperations.addDeathState(at2,at2.g);
         }
 
-        Automata at = AutomataOperations.getDifference(at2,at1);
+        Automata at = AutomataOperations.getReverse(at2);
+        at.g.display();
         if(at == null) System.out.println("LMAO");
         else AutomataOperations.exportAutomata(at.g,"lmao3.dot");
 	}
