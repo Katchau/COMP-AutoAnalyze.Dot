@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.*;
 
 import javax.swing.JButton;
 import javax.swing.JTextPane;
@@ -20,15 +21,21 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 public class Gui extends JFrame{
-	
-	public Gui(){
-		initUI();
-	}
-	
+
 	private String runResult = "";
 	private JTextArea textArea_1;
     private JComboBox comboBox;
-	
+    private AutoAnalyser autoAnalyser;
+
+    public Gui(){
+        initUI();
+    }
+
+    public Gui(AutoAnalyser t) {
+        this.autoAnalyser = t;
+        initUI();
+    }
+
 	private void initUI() {
         
 		
@@ -91,7 +98,22 @@ public class Gui extends JFrame{
         
         btnRun.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent arg0) {
-        		textArea_1.setText(textArea.getText());//TEMP
+                String filename = "cache.aa";
+                File cache = new File(filename);
+                try{
+                    FileWriter out = new FileWriter(cache, false);
+                    out.write(textArea.getText());
+                    System.out.println(textArea.getText());
+                    out.close();
+                    String result = autoAnalyser.run(cache);
+                    textArea_1.setText(result);
+                } catch (Exception e) {
+                    //TODO
+                    System.out.println(e.getMessage());
+                    System.out.println(e);
+                }
+
+
         	}
         });
         
@@ -115,8 +137,8 @@ public class Gui extends JFrame{
             ex.setExtendedState(ex.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         });
 
-	}
-	
+    }
+
 	public void resetRunConsole() {
 		runResult = "";
 		textArea_1.setText(runResult);
@@ -127,11 +149,13 @@ public class Gui extends JFrame{
 		textArea_1.setText(runResult);
 	}
 
+    @SuppressWarnings("unchecked")
     public void cleanAutomataSelector() {
         comboBox.removeAllItems();
         comboBox.addItem(new ComboItem("none",-1));
     }
 
+    @SuppressWarnings("unchecked")
     public void addOptionsAutomato(String[] options) {
         for(int i = 0; i < options.length; i++) {
             comboBox.addItem(new ComboItem(options[i],i));
@@ -143,4 +167,5 @@ public class Gui extends JFrame{
         return;
         //send to AutoAnalyser to launch graph  
     }
+
 }
