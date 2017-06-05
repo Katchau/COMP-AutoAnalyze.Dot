@@ -14,11 +14,13 @@ class Expr2 extends SimpleNode {
         Automata res = null;
 
         for(int i=0; i < children.length; i++) {
-            if (children[i] instanceof Expr3){
+            if (children[i] instanceof Expr3) {
                 res = children[i].execute();
             } else if (children[i] instanceof Complement) {
                 res = children[i].execute();
-            } else {
+            } else if (children[i] instanceof Reverse){
+                res = children[i].execute();
+            }else {
                 System.out.println("Shouldn't go here (Expr2)");
             }
         }
