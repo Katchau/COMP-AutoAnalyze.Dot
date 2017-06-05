@@ -20,19 +20,19 @@ class Accept extends SimpleNode {
           }else if (children[i] instanceof Input){
               in = ((Input) children[i]).name;
           } else {
-              System.out.println("Shouldn't go here! (Accept)");
+              AutoAnalyser.addToResult("Shouldn't go here! (Accept)");
           }
       }
       in = in.substring(1,in.length()-1);
       Automata a =  Start.curAutomatas.get(id);
       if(a != null){
           if(AutomataOperations.acceptString(a,in))
-              System.out.println("String introduced " + in + " was accepted!");
+              AutoAnalyser.addToResult("String introduced " + in + " was accepted!");
           else
-              System.err.println("String introduced " + in + " wasn't accepted!");
+              AutoAnalyser.addToResult("String introduced " + in + " wasn't accepted!");
       }
       else{
-          System.err.println("No such Identifier " + id);
+          AutoAnalyser.addToResult("No such Identifier " + id);
       }
       return null;
   }

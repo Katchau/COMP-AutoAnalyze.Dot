@@ -21,16 +21,16 @@ class Difference extends SimpleNode {
             } else if (children[i] instanceof Expr1){
                 aut2 = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here! (Difference)");
+                AutoAnalyser.addToResult("Shouldn't go here! (Difference)");
             }
         }
         if(aut1 == null || aut2 == null){
-            System.err.println("Can't do Difference since one off the automatas is invalid!");
+            AutoAnalyser.addToResult("Can't do Difference since one off the automatas is invalid!");
         }
         else{
             out = AutomataOperations.getDifference(aut1,aut2);
             if(out == null){
-                System.out.println("Difference produced an invalid automata! (no finish states!)");
+                AutoAnalyser.addToResult("Difference produced an invalid automata! (no finish states!)");
             }
         }
         return out;

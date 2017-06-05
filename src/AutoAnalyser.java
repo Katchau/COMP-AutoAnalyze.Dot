@@ -9,7 +9,7 @@ public class AutoAnalyser{
 
       public static String runResult = new String();
       public static void main(String args[]) throws ParseException, FileNotFoundException {
-            AutoAnalyser auto = new AutoAnalyser();
+            new AutoAnalyser();
       }
 
       public AutoAnalyser() {

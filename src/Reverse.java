@@ -18,11 +18,11 @@ class Reverse extends SimpleNode {
             if (children[i] instanceof Expr3){
                 at = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here! (Reverse)");
+                AutoAnalyser.addToResult("Shouldn't go here! (Reverse)");
             }
         }
         if(at == null){
-            System.err.println("Can't do Reverse since the automata is invalid!");
+            AutoAnalyser.addToResult("Can't do Reverse since the automata is invalid!");
         }
         else{
             out = AutomataOperations.getReverse(at);

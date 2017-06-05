@@ -18,7 +18,7 @@ class Expr3 extends SimpleNode {
             } else if(children[i] instanceof Expr1) {
                 res = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here (Expr3)");
+                AutoAnalyser.addToResult("Shouldn't go here (Expr3)");
             }
         }
         return res;

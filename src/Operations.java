@@ -22,7 +22,7 @@ class Operations extends SimpleNode {
             } else if(children[i] instanceof Accept){
                 children[i].execute();
             } else {
-                System.out.println("Shouldn't go here");
+                AutoAnalyser.addToResult("Shouldn't go here! Expected semantic error at Operations!");
             }
         }
 

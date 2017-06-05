@@ -21,11 +21,11 @@ class Union extends SimpleNode {
             } else if (children[i] instanceof Expr1){
                 aut2 = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here! (Union)");
+                AutoAnalyser.addToResult("Shouldn't go here! (Union)");
             }
         }
         if(aut1 == null || aut2 == null){
-            System.err.println("Can't do Union since one off the automatas is invalid!");
+            AutoAnalyser.addToResult("Can't do Union since one off the automatas is invalid!");
         }
         else{
             out = AutomataOperations.getUnion(aut1,aut2);

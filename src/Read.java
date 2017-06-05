@@ -21,11 +21,11 @@ class Read extends SimpleNode {
                 Node ggchild = gchild.jjtGetChild(0);
                 if(ggchild instanceof Filename)
                     file = ((Filename) ggchild).name;
-                else System.err.println("Missing filename. This should'nt happen ");
+                else AutoAnalyser.addToResult("Missing filename. This should'nt happen ");
             }
         }
         file = file.substring(1,file.length()-1);
-        System.out.println("Automata information for ID " + id);
+        AutoAnalyser.addToResult("Automata information for ID " + id);
         if(!file.equals("")){
             Automata a = new Automata(file);
             if(a.g == null) Start.curAutomatas.put(id,null);

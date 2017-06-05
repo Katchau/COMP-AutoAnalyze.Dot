@@ -28,12 +28,12 @@ class Complement extends SimpleNode {
             if (children[i] instanceof Expr3){
                 at = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here! (Complement)");
+                AutoAnalyser.addToResult("Shouldn't go here! (Complement)");
             }
         }
 
         if(at == null){
-            System.err.println("Can't do Complement since the automata is invalid!");
+            AutoAnalyser.addToResult("Can't do Complement since the automata is invalid!");
         }
         else{
             out = AutomataOperations.getComplement(at);

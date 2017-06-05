@@ -42,25 +42,31 @@ public class Automata {
         switch(type){
             case 0:
                 System.out.println("DFA");
+                AutoAnalyser.addToResult("DFA");
                 break;
             case 1:
                 System.out.println("Incomplete DFA");
+                AutoAnalyser.addToResult("Incomplete DFA");
                 break;
             case 2:
                 System.out.println("NFA");
+                AutoAnalyser.addToResult("NFA");
                 break;
             case 3:
                 System.out.println("E-NFA");
+                AutoAnalyser.addToResult("E-NFA");
                 break;
             default:
                 System.out.println("MEGA ULTRA AUTOMATA ERROR");
+                AutoAnalyser.addToResult("MEGA ULTRA AUTOMATA ERROR");
                 break;
         }
         System.out.println("Existent Transactions: ");
+        AutoAnalyser.addToResult("Existent Transactions: ");
         for(String t: transValues){
             System.out.print(t + ", ");
+            AutoAnalyser.addToResult(t + ", ");
         }
-        System.out.println("");
     }
 
     public boolean analyzeEdges(int i,Iterator<Edge> edges){
@@ -70,6 +76,7 @@ public class Automata {
             String[] transs = e.getAttribute("label").toString().split(",");
             if(transs.length == 0) {
                 System.err.println("Error: No transaction value!");
+                AutoAnalyser.addToResult("Error: No transaction value!");
                 return false;
             }
             String endNode = e.getTargetNode().getId();
@@ -111,7 +118,9 @@ public class Automata {
         }
         if(startStates != 1 && endStates == 0){
             System.err.println("Error: Invalid Graph detected!");
+            AutoAnalyser.addToResult("Error: Invalid Graph detected!");
             System.err.println("Start Nodes: " + startStates + " endStates " + endStates);
+            AutoAnalyser.addToResult("Start Nodes: " + startStates + " endStates " + endStates);
             return false;
         }
         return true;
@@ -128,6 +137,7 @@ public class Automata {
             }
         } catch (IOException e) {
             System.err.println("Error: No such file " + fileName);
+            AutoAnalyser.addToResult("Error: No such file " + fileName);
             return false;
         }
         return true;

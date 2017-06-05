@@ -21,7 +21,7 @@ class Expr2 extends SimpleNode {
             } else if (children[i] instanceof Reverse){
                 res = children[i].execute();
             }else {
-                System.out.println("Shouldn't go here (Expr2)");
+                AutoAnalyser.addToResult("Shouldn't go here (Expr2)");
             }
         }
         return res;

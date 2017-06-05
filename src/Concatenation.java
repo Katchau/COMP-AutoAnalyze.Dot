@@ -21,11 +21,11 @@ class Concatenation extends SimpleNode {
             } else if (children[i] instanceof Expr1){
                 aut2 = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here! (Concatenation)");
+                AutoAnalyser.addToResult("Shouldn't go here! (Concatenation)");
             }
         }
         if(aut1 == null || aut2 == null){
-            System.err.println("Can't do Concatenation since one off the automatas is invalid!");
+            AutoAnalyser.addToResult("Can't do Concatenation since one off the automatas is invalid!");
         }
         else{
             out = AutomataOperations.getConcatenate(aut1,aut2);

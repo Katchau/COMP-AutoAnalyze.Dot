@@ -21,16 +21,16 @@ class Intersection extends SimpleNode {
             } else if (children[i] instanceof Expr1){
                 aut2 = children[i].execute();
             } else {
-                System.out.println("Shouldn't go here! (Intersecion)");
+                AutoAnalyser.addToResult("Shouldn't go here! (Intersecion)");
             }
         }
         if(aut1 == null || aut2 == null){
-            System.err.println("Can't do Intersection since one off the automatas is invalid!");
+            AutoAnalyser.addToResult("Can't do Intersection since one off the automatas is invalid!");
         }
         else{
             out = AutomataOperations.getIntersection(aut1,aut2);
             if(out == null){
-                System.out.println("Intersection produced an invalid automata! (no finish states!)");
+                AutoAnalyser.addToResult("Intersection produced an invalid automata! (no finish states!)");
             }
         }
         return out;

@@ -149,7 +149,7 @@ public class AutomataOperations {
         return newA;
     }
 
-    //verify tem de ser do genero trans1%trans2%trans3
+    //verify tem de ser do genero trans1,trans2,trans3
     public static boolean acceptString(final Automata a, String verify){
         ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split(",")));
         Node n = a.start;
@@ -565,5 +565,6 @@ public class AutomataOperations {
                 nodeType.replaceAll("_end", "") : nodeType + "_end";
         return nodeType;
     }
+
 
 }
