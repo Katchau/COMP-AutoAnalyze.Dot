@@ -1,4 +1,8 @@
 import org.graphstream.graph.Graph;
+import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.Viewer;
+
+import javax.swing.*;
 
 /**
  * Created by syram on 6/5/17.
@@ -11,6 +15,7 @@ public class LaunchGraphDisplay implements  Runnable {
     }
 
     public void run() {
-        graph.display();
+        Viewer t = graph.display();
+        t.setCloseFramePolicy(Viewer.CloseFramePolicy.CLOSE_VIEWER);
     }
 }
