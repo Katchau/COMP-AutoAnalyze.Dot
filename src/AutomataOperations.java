@@ -152,7 +152,7 @@ public class AutomataOperations {
 
     //verify tem de ser do genero trans1%trans2%trans3
     public static boolean acceptString(final Automata a, String verify){
-        ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split("%")));
+        ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split(",")));
         Node n = a.start;
         for(String trans : transactions){
             boolean hasT = false;
