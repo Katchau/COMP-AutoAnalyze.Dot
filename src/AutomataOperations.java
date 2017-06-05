@@ -286,7 +286,7 @@ public class AutomataOperations {
         if(Automata.endState.matcher(start).matches()){
             if(!isFinalInter(start)){
                 replacements.put(start.replace("_end","_fakend"),start);
-                start = start.replace("_end","fakend");
+                start = start.replace("_end","_fakend");
             }
             else valid = true;
         }
@@ -354,7 +354,7 @@ public class AutomataOperations {
                         if(Automata.endState.matcher(target).matches()){
                             if(!isFinalInter(target)){
                                 replacements.put(target.replace("_end","_fakend"),target);
-                                target = target.replace("_end","fakend");
+                                target = target.replace("_end","_fakend");
                             }
                             else valid = true;
                         }
@@ -377,7 +377,7 @@ public class AutomataOperations {
                             if(Automata.endState.matcher(target).matches()){
                                 if(!isFinalInter(target)){
                                     replacements.put(target.replace("_end","_fakend"),target);
-                                    target = target.replace("_end","fakend");
+                                    target = target.replace("_end","_fakend");
                                 }
                                 else valid = true;
                             }
