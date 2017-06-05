@@ -1,4 +1,3 @@
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +16,8 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JScrollPane;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class Gui extends JFrame{
 	
@@ -26,6 +27,7 @@ public class Gui extends JFrame{
 	
 	private String runResult = "";
 	private JTextArea textArea_1;
+    private JComboBox comboBox;
 	
 	private void initUI() {
         
@@ -42,6 +44,7 @@ public class Gui extends JFrame{
         lblCode.setForeground(Color.LIGHT_GRAY);
         
         JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBackground(Color.LIGHT_GRAY);
         getContentPane().add(scrollPane, "cell 1 1,grow");       
        
         
@@ -50,7 +53,7 @@ public class Gui extends JFrame{
         textArea.setBackground(Color.LIGHT_GRAY);
         
         JButton btnRun = new JButton("Run");
-        getContentPane().add(btnRun, "cell 1 2");
+        getContentPane().add(btnRun, "flowx,cell 1 2");
         btnRun.setBackground(Color.LIGHT_GRAY);
         
         
@@ -68,11 +71,40 @@ public class Gui extends JFrame{
         textArea_1.setEditable(false);
         textArea_1.setBackground(Color.LIGHT_GRAY);
         
+        JButton btnCleanResultConsole = new JButton("Clean Result Console");
+        btnCleanResultConsole.setBackground(Color.LIGHT_GRAY);
+        getContentPane().add(btnCleanResultConsole, "cell 1 2");
+        
+        JLabel lblAutomata = new JLabel("Automata:");
+        lblAutomata.setForeground(Color.LIGHT_GRAY);
+        getContentPane().add(lblAutomata, "cell 1 2");
+        
+        comboBox = new JComboBox<ComboItem>();
+        comboBox.setBackground(Color.LIGHT_GRAY);
+        cleanAutomataSelector();
+        getContentPane().add(comboBox, "cell 1 2");
+        
+        JButton btnDisplay = new JButton("Display");
+        btnDisplay.setBackground(Color.LIGHT_GRAY);
+        getContentPane().add(btnDisplay, "cell 1 2,alignx left");
+        
         
         btnRun.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent arg0) {
         		textArea_1.setText(textArea.getText());//TEMP
         	}
+        });
+        
+        btnCleanResultConsole.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent arg0) {
+        		 resetRunConsole();
+        	}
+        });
+
+        btnDisplay.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                launchGraphic();
+            }
         });
     }
 
@@ -94,4 +126,21 @@ public class Gui extends JFrame{
 		runResult  = runResult + System.getProperty("line.separator") + append;
 		textArea_1.setText(runResult);
 	}
+
+    public void cleanAutomataSelector() {
+        comboBox.removeAllItems();
+        comboBox.addItem(new ComboItem("none",-1));
+    }
+
+    public void addOptionsAutomato(String[] options) {
+        for(int i = 0; i < options.length; i++) {
+            comboBox.addItem(new ComboItem(options[i],i));
+        }
+    }
+
+    public void launchGraphic(){
+        if(comboBox.getSelectedItem().toString().equals("ignore"))
+        return;
+        //send to AutoAnalyser to launch graph  
+    }
 }
