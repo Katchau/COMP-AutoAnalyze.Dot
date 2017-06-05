@@ -13,38 +13,19 @@ public class Start extends SimpleNode {
         super(p, id);
     }
 
-    public void readCondition(Node child){
-        String id = "";
-        String file = ""; //wtf dumbij
-        for(int j = 0; j < child.jjtGetNumChildren(); j++){
-            Node gchild = child.jjtGetChild(j);
-            if(gchild instanceof Identifier)
-                id = ((Identifier) gchild).name;
-            if(gchild instanceof Loaddotty){
-                Node ggchild = gchild.jjtGetChild(0);
-                if(ggchild instanceof Filename)
-                    file = ((Filename) ggchild).name;
-                else System.err.println("Missing filename. This should'nt happen ");
-            }
-        }
-        file = file.substring(1,file.length()-1);
-        System.out.println("Automata information for ID " + id);
-        curAutomatas.put(id,new Automata(file));
-    }
-
     public Automata execute() {
     System.out.println("Start");
         for(int i = 0; i < children.length ; i++) {
             Node child = children[i];
             if(child instanceof Read){
-                readCondition(child);
+                ((Read) child).addAutomata();
+            }
+            if(child instanceof Operations){
+                child.execute();
             }
             if(child instanceof Saves){
-                //usar isto dp x) AutomataOperations.exportAutomata(Graph, String);
-                System.out.println("To be continued ...");
+                ((Saves) child).exportAutomata();
             }
-            child.execute();
-            //System.out.println("Execute " + child.toString());
         }
         return null;
     }
