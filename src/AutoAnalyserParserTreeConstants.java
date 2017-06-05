@@ -12,12 +12,13 @@ public interface AutoAnalyserParserTreeConstants
   public int JJTDIFFERENCE = 8;
   public int JJTEXPR2 = 9;
   public int JJTCOMPLEMENT = 10;
-  public int JJTEXPR3 = 11;
-  public int JJTSAVES = 12;
-  public int JJTIDENTIFIER = 13;
-  public int JJTLOADDOTTY = 14;
-  public int JJTFILENAME = 15;
-  public int JJTINPUT = 16;
+  public int JJTREVERSE = 11;
+  public int JJTEXPR3 = 12;
+  public int JJTSAVES = 13;
+  public int JJTIDENTIFIER = 14;
+  public int JJTLOADDOTTY = 15;
+  public int JJTFILENAME = 16;
+  public int JJTINPUT = 17;
 
 
   public String[] jjtNodeName = {
@@ -32,6 +33,7 @@ public interface AutoAnalyserParserTreeConstants
     "Difference",
     "Expr2",
     "Complement",
+    "Reverse",
     "Expr3",
     "Saves",
     "Identifier",
@@ -40,4 +42,4 @@ public interface AutoAnalyserParserTreeConstants
     "Input",
   };
 }
-/* JavaCC - OriginalChecksum=ab7f793f15c6572caa00bb3a82a467ae (do not edit this line) */
+/* JavaCC - OriginalChecksum=44012e1eacc1dd417102251d2c23e374 (do not edit this line) */

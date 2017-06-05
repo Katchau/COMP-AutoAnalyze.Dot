@@ -19,19 +19,21 @@ public interface AutoAnalyserParserConstants {
   /** RegularExpression Id. */
   int COMPLEMENT = 9;
   /** RegularExpression Id. */
-  int CONCATENATION = 10;
+  int REVERSE = 10;
   /** RegularExpression Id. */
-  int INTERSECTION = 11;
+  int CONCATENATION = 11;
   /** RegularExpression Id. */
-  int UNION = 12;
+  int INTERSECTION = 12;
   /** RegularExpression Id. */
-  int DIFFERENCE = 13;
+  int UNION = 13;
   /** RegularExpression Id. */
-  int ACCEPT = 14;
+  int DIFFERENCE = 14;
   /** RegularExpression Id. */
-  int READ = 15;
+  int ACCEPT = 15;
   /** RegularExpression Id. */
-  int WRITE = 16;
+  int READ = 16;
+  /** RegularExpression Id. */
+  int WRITE = 17;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -48,6 +50,7 @@ public interface AutoAnalyserParserConstants {
     "\";\"",
     "<STRING>",
     "\"!\"",
+    "\"$\"",
     "\".\"",
     "\"/\\\\\"",
     "\"|\"",
