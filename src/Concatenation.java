@@ -2,33 +2,36 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 public
 class Concatenation extends SimpleNode {
-  public Concatenation(int id) {
-    super(id);
-  }
-
-  public Concatenation(AutoAnalyserParser p, int id) {
-    super(p, id);
-  }
-
-  public Automata execute(){
-    Automata aut1 = null;
-    Automata aut2 = null;
-    Automata out = null;
-
-    for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Expr2){
-        aut1 = children[i].execute();
-      } else if (children[i] instanceof Expr1){
-        aut2 = children[i].execute();
-      } else {
-        System.out.println("Shouldn't go here! (Concatenation)");
-      }
+    public Concatenation(int id) {
+      super(id);
     }
 
-    //TODO Automata out = getConcatenation(aut1, aut2);
+    public Concatenation(AutoAnalyserParser p, int id) {
+      super(p, id);
+    }
 
-    return out;
-  }
+    public Automata execute(){
+        Automata aut1 = null;
+        Automata aut2 = null;
+        Automata out = null;
+
+        for(int i=0; i < children.length; i++) {
+            if (children[i] instanceof Expr2){
+                aut1 = children[i].execute();
+            } else if (children[i] instanceof Expr1){
+                aut2 = children[i].execute();
+            } else {
+                System.out.println("Shouldn't go here! (Concatenation)");
+            }
+        }
+        if(aut1 == null || aut2 == null){
+            System.err.println("Can't do Concatenation since one off the automatas is invalid!");
+        }
+        else{
+            out = AutomataOperations.getConcatenate(aut1,aut2);
+        }
+        return out;
+    }
 
 }
 /* JavaCC - OriginalChecksum=2f6aeffe93302923e342396ae6d39804 (do not edit this line) */

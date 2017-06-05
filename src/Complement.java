@@ -20,21 +20,26 @@ class Complement extends SimpleNode {
     super(p, id);
   }
 
-  public Automata execute(){
-    Automata at = null;
-    Automata out = null;
+    public Automata execute(){
+        Automata at = null;
+        Automata out = null;
 
-    for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Expr3){
-        at = children[i].execute();
-      } else {
-        System.out.println("Shouldn't go here! (Complement)");
-      }
+        for(int i=0; i < children.length; i++) {
+            if (children[i] instanceof Expr3){
+                at = children[i].execute();
+            } else {
+                System.out.println("Shouldn't go here! (Complement)");
+            }
+        }
+
+        if(at == null){
+            System.err.println("Can't do Complement since the automata is invalid!");
+        }
+        else{
+            out = AutomataOperations.getComplement(at);
+        }
+
+        return out;
     }
-
-    //TODO Automata out = getDifference(aut);
-
-    return out;
-  }
 }
 /* JavaCC - OriginalChecksum=9710604948378a16cf4cc7a9a3c1c1d4 (do not edit this line) */

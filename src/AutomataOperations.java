@@ -82,7 +82,7 @@ public class AutomataOperations {
 
     }
 
-    public static void addDeathState(Automata a, Graph g){
+    private static void addDeathState(Automata a, Graph g){
         boolean hasDeath = false;
         for(int i = 0; i < a.g.getNodeCount(); i++){
             Node n = a.g.getNode(i);
@@ -114,7 +114,7 @@ public class AutomataOperations {
         }
     }
 
-    public static Automata convert2DFA(final Automata a){
+    private static Automata convert2DFA(final Automata a){
         Automata newA = new Automata();
         Graph ret = new DefaultGraph(a.g.getId());
         String start = getEClosure(a.start,"");
@@ -150,7 +150,6 @@ public class AutomataOperations {
     }
 
     //verify tem de ser do genero trans1%trans2%trans3
-    //converter para dfa antes :)
     public static boolean acceptString(final Automata a, String verify){
         ArrayList<String> transactions = new ArrayList<>(Arrays.asList(verify.split("%")));
         Node n = a.start;
@@ -182,15 +181,19 @@ public class AutomataOperations {
         }
     }
 
-    private static Automata getDfa(Automata out){
+    public static Automata getDfa(Automata out){
         out.getAutomataType();
-        if(out.type > 1)
-            return AutomataOperations.convert2DFA(out);
+        if(out.type > 1){
+            out = AutomataOperations.convert2DFA(out);
+            out.getAutomataType();
+            return out;
+        }
         else{
             if(out.type == 1) {
                 out.type = 0;
                 AutomataOperations.addDeathState(out, out.g);
             }
+            out.getAutomataType();
             return out;
         }
     }

@@ -24,7 +24,7 @@ class Saves extends SimpleNode {
         file = file.substring(1,file.length()-1);
         Automata a = Start.curAutomatas.get(id);
         if(a == null || a.g == null){
-            System.err.println("No such automata " + id);
+            System.err.println("No such valid automata " + id + " !");
         }
         else{
             AutomataOperations.exportAutomata(a.g,file);

@@ -10,20 +10,20 @@ class Expr2 extends SimpleNode {
     super(p, id);
   }
 
-  public Automata execute() {
-    Automata res = null;
+    public Automata execute() {
+        Automata res = null;
 
-    for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Expr3){
-        res = children[i].execute();
-      } else if (children[i] instanceof Complement) {
-        res = children[i].execute();
-      } else {
-        System.out.println("Shouldn't go here (Expr2)");
-      }
+        for(int i=0; i < children.length; i++) {
+            if (children[i] instanceof Expr3){
+                res = children[i].execute();
+            } else if (children[i] instanceof Complement) {
+                res = children[i].execute();
+            } else {
+                System.out.println("Shouldn't go here (Expr2)");
+            }
+        }
+        return res;
     }
-    return res;
-  }
 
 }
 /* JavaCC - OriginalChecksum=8cc311cc0beead58362999ffc16fb08f (do not edit this line) */
