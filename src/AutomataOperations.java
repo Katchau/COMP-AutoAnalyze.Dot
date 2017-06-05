@@ -80,7 +80,6 @@ public class AutomataOperations {
             if(!transi.contains(trans))
                 g.getEdge(edge).setAttribute("label",transi + "," + trans);
         }
-
     }
 
     private static void addDeathState(Automata a, Graph g){
@@ -222,7 +221,7 @@ public class AutomataOperations {
             out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
             out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
         }
-        return out;
+        return getDfa(out);
     }
 
     public static Automata getReverse(Automata in) {
@@ -349,15 +348,15 @@ public class AutomataOperations {
                         if(out.g.getNode(source) == null) source = a.getId() + "%" + b.getId();
                         target = (t1.size() == 0) ? "%" + t2.get(0).getId() : t1.get(0).getId();
                     }
+                    if(Automata.endState.matcher(target).matches()){
+                        if(!isFinalInter(target)){
+                            replacements.put(target.replace("_end","_fakend"),target);
+                            target = target.replace("_end","_fakend");
+                        }
+                        else valid = true;
+                    }
                     boolean addNode = out.g.getNode(target.replace("%","-")) == null;
                     if(addNode){
-                        if(Automata.endState.matcher(target).matches()){
-                            if(!isFinalInter(target)){
-                                replacements.put(target.replace("_end","_fakend"),target);
-                                target = target.replace("_end","_fakend");
-                            }
-                            else valid = true;
-                        }
                         transf.put(target,false);
                     }
                     addNodeEdge(out.g,trans,source,target,addNode);
@@ -372,15 +371,15 @@ public class AutomataOperations {
                     if(t.size() > 0){
                         String target = t.get(0).getId();
                         if(a == null) target = "%" + target;
+                        if(Automata.endState.matcher(target).matches()){
+                            if(!isFinalInter(target)){
+                                replacements.put(target.replace("_end","_fakend"),target);
+                                target = target.replace("_end","_fakend");
+                            }
+                            else valid = true;
+                        }
                         boolean addNode = out.g.getNode(target.replace("%","-")) == null;
                         if(addNode){
-                            if(Automata.endState.matcher(target).matches()){
-                                if(!isFinalInter(target)){
-                                    replacements.put(target.replace("_end","_fakend"),target);
-                                    target = target.replace("_end","_fakend");
-                                }
-                                else valid = true;
-                            }
                             transf.put(target,false);
                         }
                         addNodeEdge(out.g,trans,source,target,addNode);
@@ -566,6 +565,5 @@ public class AutomataOperations {
                 nodeType.replaceAll("_end", "") : nodeType + "_end";
         return nodeType;
     }
-
 
 }
