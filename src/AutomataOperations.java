@@ -77,7 +77,8 @@ public class AutomataOperations {
             g.getEdge(edge).setAttribute("label", trans);
         }catch(EdgeRejectedException | IdAlreadyInUseException e){
             String transi = g.getEdge(edge).getAttribute("label");
-            g.getEdge(edge).setAttribute("label",transi + "," + trans);
+            if(!transi.contains(trans))
+                g.getEdge(edge).setAttribute("label",transi + "," + trans);
         }
 
     }
@@ -273,10 +274,12 @@ public class AutomataOperations {
         return false;
     }
 
-    public static Automata getIntersection(final Automata in1, final Automata in2){
+    public static Automata getIntersection(final Automata ini1, final Automata ini2){
         Automata out = new Automata();
         HashMap<String, String> replacements = new HashMap<>();
         boolean valid = false;
+        Automata in1 = reverteConditions(ini1);
+        Automata in2 = reverteConditions(ini2);
 
         out.g = new DefaultGraph("intersection");
         String start = in1.start.getId() + "-" + in2.start.getId();
@@ -389,8 +392,27 @@ public class AutomataOperations {
         return getDfa(out);
     }
 
-    public static Automata getUnion (final Automata in1, final Automata in2) {
+    private static Automata reverteConditions(final Automata a){
+        Automata a2 = new Automata();
+        a2.g = new DefaultGraph(a.g.getId());
+        for(Node n : a.g.getNodeSet()){
+            a2.g.addNode(n.getId().replace("-",""));
+        }
+        for(Edge e : a.g.getEdgeSet()){
+            a2.g.addEdge(e.getId().replace("-",""),
+                    e.getNode0().getId().replace("-",""),
+                    e.getNode1().getId().replace("-",""), true)
+                    .setAttribute("label",e.getAttribute("label").toString());
+        }
+        a2.getAutomataType();
+        return a2;
+    }
+
+    public static Automata getUnion (final Automata ini1, final Automata ini2) {
         Automata out = new Automata();
+        Automata in1 = reverteConditions(ini1);
+        Automata in2 = reverteConditions(ini2);
+
         out.g = new DefaultGraph("union");
         out.g.addNode(in1.start.getId() + "-" + in2.start.getId());
         in1.start = out.g.getNode(0);

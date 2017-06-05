@@ -26,8 +26,11 @@ class Read extends SimpleNode {
         }
         file = file.substring(1,file.length()-1);
         System.out.println("Automata information for ID " + id);
-        if(!file.equals(""))
-            Start.curAutomatas.put(id,AutomataOperations.getDfa(new Automata(file)));
+        if(!file.equals("")){
+            Automata a = new Automata(file);
+            if(a.g == null) Start.curAutomatas.put(id,null);
+            else Start.curAutomatas.put(id,AutomataOperations.getDfa(a));
+        }
         else Start.curAutomatas.put(id,null);
     }
 

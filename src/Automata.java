@@ -25,10 +25,14 @@ public class Automata {
     }
 
     public Automata(String fileName){
-        if(!importAutomata(fileName))
+        if(!importAutomata(fileName)){
+            g = null;
             return;
-        if(!getAutomataType())
+        }
+        if(!getAutomataType()){
+            g = null;
             return;
+        }
         automataTypePrint();//TODO remove
         closeAutomata();
     }
