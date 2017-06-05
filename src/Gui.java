@@ -158,6 +158,7 @@ public class Gui extends JFrame{
         comboBox.addItem(new ComboItem("none","none"));
     }
 
+
     public void launchGraphic(){
         String selected = comboBox.getSelectedItem().toString();
         if(selected.equals("ignore"))
@@ -167,6 +168,7 @@ public class Gui extends JFrame{
 
     }
 
+    @SuppressWarnings("unchecked")
     private void  updateAutomataDisplay() {
         cleanAutomataSelector();
         Iterator it = Start.curAutomatas.entrySet().iterator();
