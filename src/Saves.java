@@ -2,13 +2,34 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 public
 class Saves extends SimpleNode {
-  public Saves(int id) {
-    super(id);
-  }
+    public Saves(int id) {
+      super(id);
+    }
 
-  public Saves(AutoAnalyserParser p, int id) {
-    super(p, id);
-  }
+    public Saves(AutoAnalyserParser p, int id) {
+      super(p, id);
+    }
+
+    public void exportAutomata(){
+        String id = "";
+        String file = "";
+        for(int j = 0; j < children.length; j++){
+            Node gchild = children[j];
+            if(gchild instanceof Identifier)
+                id = ((Identifier) gchild).name;
+            if(gchild instanceof Filename){
+                file = ((Filename) gchild).name;
+            }
+        }
+        file = file.substring(1,file.length()-1);
+        Automata a = Start.curAutomatas.get(id);
+        if(a == null || a.g == null){
+            System.err.println("No such valid automata " + id + " !");
+        }
+        else{
+            AutomataOperations.exportAutomata(a.g,file);
+        }
+    }
 
 }
 /* JavaCC - OriginalChecksum=1c4388ad58f2690ef9fba3d2351b314d (do not edit this line) */

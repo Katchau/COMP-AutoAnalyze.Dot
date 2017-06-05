@@ -10,25 +10,31 @@ class Difference extends SimpleNode {
     super(p, id);
   }
 
-  public Automata execute(){
-    Automata aut1 = null;
-    Automata aut2 = null;
-    Automata out = null;
+    public Automata execute(){
+        Automata aut1 = null;
+        Automata aut2 = null;
+        Automata out = null;
 
-    for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Expr2){
-        aut1 = children[i].execute();
-      } else if (children[i] instanceof Expr1){
-        aut2 = children[i].execute();
-      } else {
-        System.out.println("Shouldn't go here! (Difference)");
-      }
+        for(int i=0; i < children.length; i++) {
+            if (children[i] instanceof Expr2){
+                aut1 = children[i].execute();
+            } else if (children[i] instanceof Expr1){
+                aut2 = children[i].execute();
+            } else {
+                System.out.println("Shouldn't go here! (Difference)");
+            }
+        }
+        if(aut1 == null || aut2 == null){
+            System.err.println("Can't do Difference since one off the automatas is invalid!");
+        }
+        else{
+            out = AutomataOperations.getDifference(aut1,aut2);
+            if(out == null){
+                System.out.println("Difference produced an invalid automata! (no finish states!)");
+            }
+        }
+        return out;
     }
-
-    //TODO Automata out = getDifference(aut1, aut2);
-
-    return out;
-  }
 
 }
 /* JavaCC - OriginalChecksum=4a439b02e328d7d81e444274e104f168 (do not edit this line) */

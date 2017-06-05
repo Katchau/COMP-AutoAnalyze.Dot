@@ -28,6 +28,7 @@ TOKEN:
     |<STRING: ("\""(~["\""])*"\"") >
     // OPERATION
     |<COMPLEMENT: "!">
+    |<REVERSE: "$">
     |<CONCATENATION: ".">
     |<INTERSECTION: "/\\" >
     |<UNION: "|">
@@ -339,6 +340,34 @@ void Expr2():{/*@bgen(jjtree) Expr2 */
                  }
                }
 /*@egen*/            
+  | <REVERSE>/*@bgen(jjtree) Reverse */
+              {
+                Reverse jjtn002 = new Reverse(JJTREVERSE);
+                boolean jjtc002 = true;
+                jjtree.openNodeScope(jjtn002);
+              }
+              try {
+/*@egen*/ Expr3()/*@bgen(jjtree)*/
+              } catch (Throwable jjte002) {
+                if (jjtc002) {
+                  jjtree.clearNodeScope(jjtn002);
+                  jjtc002 = false;
+                } else {
+                  jjtree.popNode();
+                }
+                if (jjte002 instanceof RuntimeException) {
+                  throw (RuntimeException)jjte002;
+                }
+                if (jjte002 instanceof ParseException) {
+                  throw (ParseException)jjte002;
+                }
+                throw (Error)jjte002;
+              } finally {
+                if (jjtc002) {
+                  jjtree.closeNodeScope(jjtn002, true);
+                }
+              }
+/*@egen*/         
   | Expr3()/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {

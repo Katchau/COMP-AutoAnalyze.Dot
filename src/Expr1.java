@@ -11,26 +11,27 @@ class Expr1 extends SimpleNode {
   }
 
  public Automata execute() {
-   Automata first = null;
-   Automata res = null;
+    Automata first = null;
+    Automata res = null;
 
     for(int i=0; i < children.length; i++) {
-       if (children[i] instanceof Concatenation){
-        res = children[i].execute();
-      } else if (children[i] instanceof Intersection){
-        res = children[i].execute();
-      } else if (children[i] instanceof Union){
-        res = children[i].execute();
-      } else if (children[i] instanceof Difference){
-        res = children[i].execute();
-      } else if (children[i] instanceof Expr2){
-        res = children[i].execute();
-      } else {
-        System.out.println("Shouldn't go here (Expr1)");
-      }
+        if (children[i] instanceof Concatenation){
+            res = children[i].execute();
+        } else if (children[i] instanceof Intersection){
+            res = children[i].execute();
+        } else if (children[i] instanceof Union){
+            res = children[i].execute();
+        } else if (children[i] instanceof Difference){
+            res = children[i].execute();
+        } else if (children[i] instanceof Expr2){
+            res = children[i].execute();
+        } else {
+            System.out.println("Shouldn't go here (Expr1)");
+        }
     }
+
     if (res == null)
-      return first;
+        return first;
     return res;
   }
 }

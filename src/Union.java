@@ -10,25 +10,28 @@ class Union extends SimpleNode {
     super(p, id);
   }
 
-  public Automata execute(){
-    Automata aut1 = null;
-    Automata aut2 = null;
-    Automata out = null;
+    public Automata execute(){
+        Automata aut1 = null;
+        Automata aut2 = null;
+        Automata out = null;
 
-    for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Expr2){
-        aut1 = children[i].execute();
-      } else if (children[i] instanceof Expr1){
-        aut2 = children[i].execute();
-      } else {
-        System.out.println("Shouldn't go here! (Union)");
-      }
+        for(int i=0; i < children.length; i++) {
+            if (children[i] instanceof Expr2){
+                aut1 = children[i].execute();
+            } else if (children[i] instanceof Expr1){
+                aut2 = children[i].execute();
+            } else {
+                System.out.println("Shouldn't go here! (Union)");
+            }
+        }
+        if(aut1 == null || aut2 == null){
+            System.err.println("Can't do Union since one off the automatas is invalid!");
+        }
+        else{
+            out = AutomataOperations.getUnion(aut1,aut2);
+        }
+        return out;
     }
-
-    //TODO Automata out = getUnion(aut1, aut2);
-
-    return out;
-  }
 
 }
 /* JavaCC - OriginalChecksum=9b7c56766f2c48096224f1bf573dae0e (do not edit this line) */

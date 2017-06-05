@@ -24,6 +24,7 @@ TOKEN:
     |<STRING: ("\""(~["\""])*"\"") >
     // OPERATION
     |<COMPLEMENT: "!">
+    |<REVERSE: "$">
     |<CONCATENATION: ".">
     |<INTERSECTION: "/\\" >
     |<UNION: "|">
@@ -72,6 +73,7 @@ void Expr1():{} {
 
 void Expr2():{}{
   <COMPLEMENT> Expr3() #Complement
+  | <REVERSE> Expr3() #Reverse
   | Expr3()
 }
 

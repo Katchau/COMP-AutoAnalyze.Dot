@@ -2,13 +2,34 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 public
 class Read extends SimpleNode {
-  public Read(int id) {
-    super(id);
-  }
+    public Read(int id) {
+        super(id);
+    }
 
-  public Read(AutoAnalyserParser p, int id) {
-    super(p, id);
-  }
+    public Read(AutoAnalyserParser p, int id) {
+        super(p, id);
+    }
+
+    public void addAutomata(){
+        String id = "";
+        String file = "";
+        for(int j = 0; j < children.length; j++){
+            Node gchild = children[j];
+            if(gchild instanceof Identifier)
+                id = ((Identifier) gchild).name;
+            if(gchild instanceof Loaddotty){
+                Node ggchild = gchild.jjtGetChild(0);
+                if(ggchild instanceof Filename)
+                    file = ((Filename) ggchild).name;
+                else System.err.println("Missing filename. This should'nt happen ");
+            }
+        }
+        file = file.substring(1,file.length()-1);
+        System.out.println("Automata information for ID " + id);
+        if(!file.equals(""))
+            Start.curAutomatas.put(id,AutomataOperations.getDfa(new Automata(file)));
+        else Start.curAutomatas.put(id,null);
+    }
 
 }
 /* JavaCC - OriginalChecksum=e1786b2d37b4a14ec4a06ef2a31d77ea (do not edit this line) */
