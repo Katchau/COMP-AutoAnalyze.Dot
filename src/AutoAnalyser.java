@@ -20,11 +20,12 @@ public class AutoAnalyser{
           });
         }
 
-        public String run(File cache) {
+        public void run(File cache) {
             runResult = "";
             try {
                 FileReader fr = new FileReader(cache);
                 BufferedReader br = new BufferedReader(fr);
+                Start.curAutomatas.clear();
                 if(analyserParser == null)
                     analyserParser = new AutoAnalyserParser(br);
                 else {
@@ -37,10 +38,9 @@ public class AutoAnalyser{
             } catch (Exception e) {
                 addToResult(e.getMessage());
             }
-            return runResult;
         }
 
         public static void addToResult(String s) {
-          runResult += runResult + "\n" + s;
+          runResult += "\n" + s;
         }
 }

@@ -3,9 +3,9 @@
  */
 class ComboItem {
     private String key;
-    private int value;
+    private String value;
 
-    public ComboItem(String key, int value){
+    public ComboItem(String key, String value){
         this.key = key;
         this.value = value;
     }
@@ -19,7 +19,7 @@ class ComboItem {
         return key;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 }

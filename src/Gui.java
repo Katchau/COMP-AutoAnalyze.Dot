@@ -7,6 +7,8 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.*;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JTextPane;
@@ -105,12 +107,12 @@ public class Gui extends JFrame{
                     out.write(textArea.getText());
                     System.out.println(textArea.getText());
                     out.close();
-                    String result = autoAnalyser.run(cache);
-                    textArea_1.setText(result);
+                    autoAnalyser.run(cache);
+                    textArea_1.setText(AutoAnalyser.runResult);
+                    updateAutomataDisplay();
                 } catch (Exception e) {
-                    //TODO
-                    System.out.println(e.getMessage());
-                    System.out.println(e);
+                    //System.out.println(e.getMessage());
+                    //System.out.println(e);
                 }
 
 
@@ -142,30 +144,39 @@ public class Gui extends JFrame{
 	public void resetRunConsole() {
 		runResult = "";
 		textArea_1.setText(runResult);
+        cleanAutomataSelector();
 	}
 	
 	public void appendString(String append) {
-		runResult  = runResult + System.getProperty("line.separator") + append;
+		runResult = runResult + System.getProperty("line.separator") + append;
 		textArea_1.setText(runResult);
 	}
 
     @SuppressWarnings("unchecked")
     public void cleanAutomataSelector() {
         comboBox.removeAllItems();
-        comboBox.addItem(new ComboItem("none",-1));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addOptionsAutomato(String[] options) {
-        for(int i = 0; i < options.length; i++) {
-            comboBox.addItem(new ComboItem(options[i],i));
-        }
+        comboBox.addItem(new ComboItem("none","none"));
     }
 
     public void launchGraphic(){
-        if(comboBox.getSelectedItem().toString().equals("ignore"))
+        String selected = comboBox.getSelectedItem().toString();
+        if(selected.equals("ignore"))
         return;
-        //send to AutoAnalyser to launch graph  
+        Automata t = Start.curAutomatas.get(selected);
+        (new Thread(new LaunchGraphDisplay(t.g))).start();
+
     }
+
+    private void  updateAutomataDisplay() {
+        cleanAutomataSelector();
+        Iterator it = Start.curAutomatas.entrySet().iterator();
+        System.out.println(it.hasNext());
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry) it.next();
+            comboBox.addItem(new ComboItem(pair.getKey().toString(),"none"));
+        }
+    }
+
+
 
 }

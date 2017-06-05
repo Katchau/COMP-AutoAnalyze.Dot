@@ -27,7 +27,7 @@ class Saves extends SimpleNode {
             AutoAnalyser.addToResult("Can't export automata " + id + ", since it's not valid !");
         }
         else{
-            AutoAnalyser.addToResult("Automoata " + id + " successfully saved to " + file + "!");
+            AutoAnalyser.addToResult("Automota " + id + " successfully saved to " + file + "!");
             AutomataOperations.exportAutomata(a.g,file);
         }
     }
