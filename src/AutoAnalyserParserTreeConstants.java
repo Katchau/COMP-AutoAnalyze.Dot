@@ -4,33 +4,28 @@ public interface AutoAnalyserParserTreeConstants
   public int JJTSTART = 0;
   public int JJTREAD = 1;
   public int JJTOPERATIONS = 2;
-  public int JJTINPUT = 3;
-  public int JJTACCEPT = 4;
-  public int JJTEXPRESSION = 5;
-  public int JJTEXPR1 = 6;
-  public int JJTSUM = 7;
-  public int JJTCONCATENATION = 8;
-  public int JJTINTERSECTION = 9;
-  public int JJTUNION = 10;
-  public int JJTDIFFERENCE = 11;
-  public int JJTEXPR2 = 12;
-  public int JJTCOMPLEMENT = 13;
-  public int JJTEXPR3 = 14;
-  public int JJTSAVES = 15;
-  public int JJTIDENTIFIER = 16;
-  public int JJTLOADDOTTY = 17;
-  public int JJTFILENAME = 18;
+  public int JJTACCEPT = 3;
+  public int JJTEXPR1 = 4;
+  public int JJTCONCATENATION = 5;
+  public int JJTINTERSECTION = 6;
+  public int JJTUNION = 7;
+  public int JJTDIFFERENCE = 8;
+  public int JJTEXPR2 = 9;
+  public int JJTCOMPLEMENT = 10;
+  public int JJTEXPR3 = 11;
+  public int JJTSAVES = 12;
+  public int JJTIDENTIFIER = 13;
+  public int JJTLOADDOTTY = 14;
+  public int JJTFILENAME = 15;
+  public int JJTINPUT = 16;
 
 
   public String[] jjtNodeName = {
     "Start",
     "Read",
     "Operations",
-    "input",
     "Accept",
-    "Expression",
     "Expr1",
-    "Sum",
     "Concatenation",
     "Intersection",
     "Union",
@@ -42,6 +37,7 @@ public interface AutoAnalyserParserTreeConstants
     "Identifier",
     "Loaddotty",
     "Filename",
+    "Input",
   };
 }
-/* JavaCC - OriginalChecksum=fd601c48902a88a44f1827f23021deec (do not edit this line) */
+/* JavaCC - OriginalChecksum=ab7f793f15c6572caa00bb3a82a467ae (do not edit this line) */

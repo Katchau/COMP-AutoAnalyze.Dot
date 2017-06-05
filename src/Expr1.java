@@ -15,11 +15,7 @@ class Expr1 extends SimpleNode {
    Automata res = null;
 
     for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Expr2){
-        first = children[i].execute();
-      } else if (children[i] instanceof Sum){
-        res = children[i].execute();
-      } else if (children[i] instanceof Concatenation){
+       if (children[i] instanceof Concatenation){
         res = children[i].execute();
       } else if (children[i] instanceof Intersection){
         res = children[i].execute();
@@ -27,8 +23,10 @@ class Expr1 extends SimpleNode {
         res = children[i].execute();
       } else if (children[i] instanceof Difference){
         res = children[i].execute();
+      } else if (children[i] instanceof Expr2){
+        res = children[i].execute();
       } else {
-        System.out.println("Shouldn't go here2");
+        System.out.println("Shouldn't go here (Expr1)");
       }
     }
     if (res == null)

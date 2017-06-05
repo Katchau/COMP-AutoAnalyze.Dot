@@ -11,16 +11,23 @@ class Intersection extends SimpleNode {
   }
 
   public Automata execute(){
+    Automata aut1 = null;
+    Automata aut2 = null;
+    Automata out = null;
+
     for(int i=0; i < children.length; i++) {
-      if (children[i] instanceof Identifier){
-        System.out.println(((Identifier) children[i]).name);
+      if (children[i] instanceof Expr2){
+        aut1 = children[i].execute();
       } else if (children[i] instanceof Expr1){
-        children[i].execute();
+        aut2 = children[i].execute();
       } else {
-        System.out.println(children[i]);
+        System.out.println("Shouldn't go here! (Intersecion)");
       }
     }
-    return null;
+
+    //TODO Automata out = getIntersection(aut1, aut2);
+
+    return out;
   }
 
 }

@@ -17,12 +17,10 @@ class Operations extends SimpleNode {
       if(children[i] instanceof Identifier){
         System.out.println(((Identifier) children[i]).name);
         varName = ((Identifier) children[i]).name;
-      } else if(children[i] instanceof Expression) {
+      } else if(children[i] instanceof Expr1) {
         children[i].execute();
       } else if(children[i] instanceof Accept){
-        System.out.println("Accept Case");
-      } else if(children[i] instanceof Input){
-        System.out.println(((Input) children[i]).name);
+        children[i].execute();
       } else {
         System.out.println("Shouldn't go here");
       }

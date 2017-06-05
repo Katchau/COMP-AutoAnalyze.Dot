@@ -23,7 +23,6 @@ TOKEN:
     |<ENDLINE : ";">
     |<STRING: ("\""(~["\""])*"\"") >
     // OPERATION
-    |<SUM : "+">
     |<COMPLEMENT: "!">
     |<CONCATENATION: ".">
     |<INTERSECTION: "/\\" >
@@ -53,14 +52,10 @@ void Read() : {} {
 void Operations() : {  } {
     Identifier()
     (
-        <EQUAL> Expression()
-      | <ACCEPT> "(" Input() ")" #Accept
+        <EQUAL> Expr1()
+      | <ACCEPT> "(" Input() ")" #Accept(2)
     )
     <ENDLINE>
-}
-
-void Expression():{} {
-    Expr1()
 }
 
 void Expr1():{} {

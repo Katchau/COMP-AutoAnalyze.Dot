@@ -11,9 +11,22 @@ class Accept extends SimpleNode {
   }
 
   public Automata execute() {
-    for(int i=0; i < children.length; i++) {
+    String id = "";
+    String in = "";
 
+    for(int i=0; i < children.length; i++) {
+      if (children[i] instanceof Identifier){
+        id = ((Identifier) children[i]).name;
+        System.out.println(id);
+      } else if (children[i] instanceof Input){
+        in = ((Input) children[i]).name;
+        System.out.println(in);
+      } else {
+        System.out.println("Shouldn't go here! (Complement)");
+      }
     }
+
+
     return null;
   }
 }
