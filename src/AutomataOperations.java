@@ -226,14 +226,18 @@ public class AutomataOperations {
 
     public static Automata getReverse(Automata in) {
         Automata out = new Automata();
-        out.start = in.start; //isto tem que ser o epsilon TODO
+
         Graph g = in.g;
-        out.g = new DefaultGraph("reversed");
+        out.g = new DefaultGraph("$");
+        HashMap<String,String> track = new HashMap<String,String>();
 
         for(int i = 0; i < in.g.getNodeCount(); i++){
             Node n = in.g.getNode(i);
-            String nodeOppType = n.getId().equals("new-death-node") ?
-                    n.getId() : reverseNode(n);
+            if(n.getId().contains("new-death-node")) continue;
+            String nodeOppType = reverseNodeReverse(n);
+            if(Automata.endState.matcher(n.getId()).matches()){
+                track.put(n.getId(),nodeOppType);
+            }
             out.g.addNode(nodeOppType);
         }
 
@@ -242,17 +246,28 @@ public class AutomataOperations {
             Node start = e.getNode1();
             Node end = e.getNode0();
 
-            String startNodeType = reverseNode(start);
-            String endNodeType = reverseNode(end);
+            if(start.getId().contains("new-death-node") || end.getId().contains("new-death-node")) continue;
 
-            if(start.getId().equals("new-death-node")) {
-                out.g.addEdge(e.getId(), endNodeType, start.getId() , true);
-            } else if(end.getId().equals("new-death-node")) {
-                out.g.addEdge(e.getId(), start.getId(), startNodeType, true);
-            } else {
-                out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
-            }
+            String startNodeType = reverseNodeReverse(start);
+            String endNodeType = reverseNodeReverse(end);
+
+            System.out.print(start.getId());
+
+
+            out.g.addEdge(e.getId(), startNodeType, endNodeType, true);
             out.g.getEdge(e.getId()).setAttribute("label",e.getAttribute("label").toString());
+        }
+
+
+        out.g.addNode("start");
+        out.start = out.g.getNode("start");
+        Iterator it = track.entrySet().iterator();
+
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry) it.next();
+            String id = "start" + pair.getValue();
+            out.g.addEdge(id,"start", pair.getValue().toString(),true);
+            out.g.getEdge(id).setAttribute("label","epsilon");
         }
         return getDfa(out);
     }
@@ -567,4 +582,13 @@ public class AutomataOperations {
     }
 
 
+    private static String reverseNodeReverse(Node n){
+        String nodeType = n.getId();
+        nodeType = (Automata.endState.matcher(nodeType).matches()) ?
+                nodeType.replaceAll("_end", "") :
+                (Automata.startState.matcher(nodeType).matches()) ?
+                        nodeType.replaceAll("start","_end"):
+                        nodeType;
+        return nodeType;
+    }
 }
